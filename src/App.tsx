@@ -263,7 +263,7 @@ const App: React.FC = () => {
                     </motion.div>
 
                     <motion.div 
-                      className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-min"
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 auto-rows-fr"
                       variants={{
                         hidden: { opacity: 0 },
                         visible: {
@@ -278,7 +278,7 @@ const App: React.FC = () => {
                         {SERVICES.slice(0, 3).map((service, i) => (
                             <motion.div
                               key={i}
-                              className="glass-card p-8 md:p-10 lg:p-12 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10"
+                              className="glass-card p-6 md:p-8 lg:p-10 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10 h-full min-h-[260px] flex flex-col justify-between"
                               variants={{
                                 hidden: { opacity: 0, y: 50, scale: 0.9 },
                                 visible: {
@@ -298,7 +298,7 @@ const App: React.FC = () => {
                               }}
                             >
                                 <motion.div 
-                                  className="w-12 h-12 mb-6 text-gray-300 group-hover:text-white transition-colors"
+                                  className="w-12 h-12 mb-6 text-gray-300 group-hover:text-white transition-colors flex items-center justify-center"
                                   whileHover={{ 
                                     scale: 1.1,
                                     rotate: 5,
