@@ -278,7 +278,7 @@ const App: React.FC = () => {
                         {SERVICES.slice(0, 3).map((service, i) => (
                             <motion.div
                               key={i}
-                              className="glass-card p-6 md:p-8 lg:p-10 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10 h-full flex flex-col justify-between"
+                              className="glass-card p-6 md:p-8 lg:p-10 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10 h-full min-h-[260px] flex flex-col justify-between"
                               variants={{
                                 hidden: { opacity: 0, y: 50, scale: 0.9 },
                                 visible: {
