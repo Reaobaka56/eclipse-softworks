@@ -5,6 +5,19 @@ html, body, #root {
   box-sizing: border-box;
   max-width: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #000; /* ensure black background to avoid white underlay during overscroll */
+  min-height: 100vh;
+  height: 100%;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: contain; /* prevent scroll chaining / overscroll allowing white underlay reveal */
+}
+
+/* Safe area insets: ensure content is never visible behind home indicators */
+body {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-top: env(safe-area-inset-top, 0);
+  background-color: #000;
 }
 
 /* visually hidden (skip link target) */
@@ -67,7 +80,7 @@ html, body, #root {
   text-shadow: 0 4px 40px rgba(255,255,255,0.06);
 }
 
-.floating-object {
+.floating-object { 
   transform: translateY(0);
   animation: float 6s ease-in-out infinite;
 }

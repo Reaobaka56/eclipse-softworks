@@ -203,7 +203,7 @@ const App: React.FC = () => {
             >
                 <div className="max-w-7xl mx-auto">
                     <motion.div 
-                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+                      className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-4 gap-8"
                       variants={{
                         hidden: { opacity: 0, y: 30 },
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -542,7 +542,7 @@ const App: React.FC = () => {
                     </motion.div>
 
                     <motion.div 
-                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min"
+                      className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min"
                       variants={{
                         hidden: { opacity: 0 },
                         visible: {
@@ -1359,7 +1359,7 @@ const App: React.FC = () => {
             <section className="py-24 px-6 relative z-10 border-t border-white/10 bg-gradient-to-b from-black via-zinc-900/20 to-black animate-slide-down">
                 <div className="max-w-7xl mx-auto">
                     <div className="glass-card p-8 transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                             <div>
                                 <h2 className="text-4xl font-bold text-white mb-6">Empower Your Business with Eclipse Softworks</h2>
                                 <p className="text-gray-400 text-lg mb-8">We deliver innovative technology solutions that drive growth, enhance efficiency, and transform the way you do business.</p>
@@ -1564,7 +1564,7 @@ const App: React.FC = () => {
                     </div>
 
                     <div className="glass-card p-8 mb-16 transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                             <div>
                                 <h3 className="text-3xl font-bold mb-6">Meet the Team</h3>
                                 <p className="text-gray-400 leading-relaxed mb-6">
@@ -1575,7 +1575,7 @@ const App: React.FC = () => {
                                     <cite className="text-sm text-gray-500">— The Eclipse Team</cite>
                                 </blockquote>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
                               <div className="col-span-2 md:col-span-1">
                                 <NeuralCard className="w-full h-48" />
                               </div>
@@ -1620,7 +1620,7 @@ const App: React.FC = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {[
                                 { icon: "fa-brain", title: "AI-Powered Analytics Platform", desc: "Advanced machine learning platform for business intelligence and predictive analytics.", tags: ["Python", "TensorFlow", "React"], status: "Live", statusColor: "green" },
                                 { icon: "fa-mobile-alt", title: "Mobile Banking Solution", desc: "Secure and intuitive mobile banking application for African financial institutions.", tags: ["React Native", "Node.js", "MongoDB"], status: "In Development", statusColor: "blue" },
@@ -1647,7 +1647,7 @@ const App: React.FC = () => {
                       {/* Testimonials block */}
                       <div className="mb-16">
                         <h3 className="text-2xl font-bold text-white mb-6">What our clients say</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                           {TESTIMONIALS.slice(0,3).map((t, i) => (
                             <div key={i} className="glass-card p-6 text-sm text-gray-400">
                               <p className="italic text-gray-300 mb-3">"{t.content}"</p>
@@ -1668,7 +1668,7 @@ const App: React.FC = () => {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                             {[
                                 { icon: "fa-cube", title: "Eclipse SDK", desc: "Complete software development kit for building applications with Eclipse Softworks tools.", meta: ["Size: 45 MB", "Version: v2.1.0"] },
                                 { icon: "fa-book", title: "API Documentation", desc: "Comprehensive documentation and examples for our REST API endpoints.", meta: ["Size: PDF", "Version: v1.8"] },
@@ -1696,7 +1696,7 @@ const App: React.FC = () => {
                     </div>
 
                     <div className="glass-card p-8 transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                             <div>
                                 <h3 className="text-2xl font-bold mb-6">Why Choose Us</h3>
                                 <ul className="space-y-4">
@@ -1899,7 +1899,7 @@ const App: React.FC = () => {
                           className="text-2xl font-bold text-white mb-8 text-center"
                           whileHover={{ scale: 1.05 }}
                         >Development Team</motion.h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[
                                 {
                                     initials: "TM",
@@ -2024,7 +2024,7 @@ const App: React.FC = () => {
                           className="text-2xl font-bold text-white mb-8 text-center"
                           whileHover={{ scale: 1.05 }}
                         >Business Operations</motion.h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
                             {[
                                 {
                                     initials: "YN",
@@ -2124,7 +2124,7 @@ const App: React.FC = () => {
                         <p className="text-gray-400 mb-6 max-w-3xl mx-auto">
                             At Eclipse Softworks, we believe in collaboration, innovation, and building for impact. Our diverse team brings together different perspectives, skills, and experiences to create solutions that matter. We're not just colleagues — we're a community united by our passion for technology and our commitment to Africa's digital future.
                         </p>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
                             {[
                                 { icon: "fa-users", title: "Collaboration", desc: "We work together across disciplines to achieve extraordinary results." },
                                 { icon: "fa-lightbulb", title: "Innovation", desc: "We embrace new ideas and technologies to solve complex challenges." },
@@ -2204,7 +2204,7 @@ const App: React.FC = () => {
                     </motion.div>
 
                     <motion.div 
-                      className="grid grid-cols-1 md:grid-cols-2 gap-12"
+                      className="grid grid-cols-1 lg:grid-cols-2 gap-12"
                       variants={{
                         hidden: { opacity: 0 },
                         visible: {
@@ -2403,7 +2403,7 @@ const App: React.FC = () => {
                             >
                                 <h3 className="text-xl font-bold mb-4">Eclipse Softworks</h3>
                                 <p className="text-gray-400 mb-4">Building Africa's digital future through innovative software solutions, one line of code at a time.</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                     <div>
                                         <h4 className="font-bold text-sm mb-2">Services</h4>
                                         <ul className="text-xs text-gray-400 space-y-1">
