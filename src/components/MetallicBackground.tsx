@@ -24,9 +24,12 @@ const MetallicBackground: React.FC = () => {
         powerPreference: "high-performance"
     });
     
+    // Reduce resolution and expensive features on small devices
+    const isSmall = window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const devicePixelRatio = isSmall ? 1 : Math.min(window.devicePixelRatio, 2);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
+    renderer.setPixelRatio(devicePixelRatio);
+    renderer.shadowMap.enabled = !isSmall;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
@@ -71,17 +74,20 @@ const MetallicBackground: React.FC = () => {
         opacity: 0.9
     });
 
-    // Create environment map
-    // Using empty strings as in template, but lighting boost compensates for lack of real reflection
-    const envMap = new THREE.CubeTextureLoader().load([
-        '', '', '', '', '', '' 
-    ]);
-    baseMaterial.envMap = envMap;
+    // Create environment map — only load if URLs are provided to avoid 404 requests
+    const envMapUrls: string[] = []; // replace with real sources when adding an HDR/skybox
+    if (envMapUrls.length === 6 && envMapUrls.some(Boolean)) {
+        const envMap = new THREE.CubeTextureLoader().load(envMapUrls);
+        baseMaterial.envMap = envMap;
+    } else {
+        baseMaterial.envMap = null;
+    }
 
     const shapes: THREE.Mesh[] = [];
     
-    // 4. Create Geometry - Loop 1: 25 Large Floating Donuts
-    for (let i = 0; i < 25; i++) {
+    // 4. Create Geometry - Loop 1: 25 Large Floating Donuts (reduced on small screens)
+    const donutCount = isSmall ? 6 : 25;
+    for (let i = 0; i < donutCount; i++) {
         const radius = Math.random() * 1.5 + 1.5; // Larger donuts: 1.5 to 3.0
         const tube = radius * 0.3; // Proportional tube size
         const geometry = new THREE.TorusGeometry(radius, tube, 32, 64);
@@ -123,8 +129,9 @@ const MetallicBackground: React.FC = () => {
         scene.add(mesh);
     }
 
-    // Loop 2: 5 Extra Large Centerpiece Donuts
-    for (let i = 0; i < 5; i++) {
+    // Loop 2: 5 Extra Large Centerpiece Donuts (reduced on small)
+    const centerCount = isSmall ? 1 : 5;
+    for (let i = 0; i < centerCount; i++) {
         const radius = Math.random() * 2 + 3; // Very large: 3 to 5
         const tube = radius * 0.25;
         const geometry = new THREE.TorusGeometry(radius, tube, 48, 96);
@@ -165,7 +172,7 @@ const MetallicBackground: React.FC = () => {
         scene.add(mesh);
     }
 
-    camera.position.z = 25;
+    camera.position.z = isSmall ? 35 : 25;
 
     // 5. Interaction
     let mouseX = 0;
@@ -178,7 +185,7 @@ const MetallicBackground: React.FC = () => {
         targetX = (e.clientX - window.innerWidth / 2) * mouseStrength;
         targetY = (e.clientY - window.innerHeight / 2) * mouseStrength;
     };
-    document.addEventListener('mousemove', handleMouseMove);
+    if (!isSmall) document.addEventListener('mousemove', handleMouseMove);
 
     const handleResize = () => {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -188,7 +195,7 @@ const MetallicBackground: React.FC = () => {
     window.addEventListener('resize', handleResize);
 
     const handleClick = () => {
-        shapes.forEach((donut, index) => {
+        shapes.forEach((donut) => {
             const originalScale = donut.scale.x;
             donut.scale.setScalar(originalScale * 1.2);
             
@@ -202,7 +209,7 @@ const MetallicBackground: React.FC = () => {
             }, 100);
         });
     };
-    document.addEventListener('click', handleClick);
+    if (!isSmall) document.addEventListener('click', handleClick);
 
     // 6. Animation Loop
     const clock = new THREE.Clock();
@@ -223,7 +230,7 @@ const MetallicBackground: React.FC = () => {
         camera.position.y = Math.cos(time * 0.03) * 0.5 + mouseY * 10;
 
         // Shape animation
-        shapes.forEach((donut, index) => {
+        shapes.forEach((donut) => {
             const data = donut.userData;
             const mat = donut.material as THREE.MeshPhysicalMaterial;
             
@@ -245,16 +252,18 @@ const MetallicBackground: React.FC = () => {
             donut.rotation.y += data.rotationSpeed.y;
             donut.rotation.z += data.rotationSpeed.z;
             
-            // Mouse influence on rotation
-            donut.rotation.x += mouseY * 0.02;
-            donut.rotation.y += mouseX * 0.02;
+            // Mouse influence on rotation (only on larger screens)
+            if (!isSmall) {
+                donut.rotation.x += mouseY * 0.02;
+                donut.rotation.y += mouseX * 0.02;
+            }
             
             // Pulse
-            const pulse = Math.sin(time * data.pulseSpeed + index) * data.pulseAmplitude + 1;
+            const pulse = Math.sin(time * data.pulseSpeed + data.hoverOffset) * data.pulseAmplitude + 1;
             donut.scale.setScalar(pulse);
             
             // Color shift
-            const hueShift = (Math.sin(time * 0.1 + index * 0.5) + 1) * 0.1;
+            const hueShift = (Math.sin(time * 0.1 + data.hoverOffset * 0.5) + 1) * 0.1;
             mat.color.setHSL(0.1 + hueShift, 0.3, 0.2);
         });
 
@@ -273,7 +282,7 @@ const MetallicBackground: React.FC = () => {
     };
   }, []);
 
-  return <div ref={containerRef} id="canvas-container" className="fixed top-0 left-0 w-full h-full z-0 bg-black pointer-events-none" />;
+    return <div ref={containerRef} id="canvas-container" className="fixed top-0 left-0 w-full h-full -z-20 bg-black pointer-events-none" />;
 };
 
 export default MetallicBackground;

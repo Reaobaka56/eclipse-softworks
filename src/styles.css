@@ -1,0 +1,213 @@
+/* Global styles and custom utilities for Eclipse Softworks */
+
+/* Ensure no accidental horizontal scrolling */
+html, body, #root {
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* visually hidden (skip link target) */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+.visually-hidden:focus, .visually-hidden:active {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  clip: auto !important;
+  display: inline-block !important;
+  margin: 0.5rem !important;
+  background: #ffffff;
+  color: #000000;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  z-index: 50;
+}
+
+/* Glass panel / card styles */
+.glass-panel {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  isolation: isolate; /* Prevent child z-index leakage and ensure local stacking context */
+}
+
+.glass-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 30px rgba(2, 6, 23, 0.6);
+  isolation: isolate; /* Prevent negative z-index children from escaping stacking context */
+}
+
+.download-card {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.download-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 10px 40px rgba(2,6,23,0.6);
+}
+
+.border-glow {
+  box-shadow: 0 0 40px rgba(255,255,255,0.03), inset 0 0 10px rgba(255,255,255,0.02);
+}
+
+.text-glow {
+  text-shadow: 0 4px 40px rgba(255,255,255,0.06);
+}
+
+.floating-object {
+  transform: translateY(0);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); }}
+
+/* Green blinking animation for affirmation text */
+@keyframes green-blink {
+  0%, 100% { color: #10b981; text-shadow: 0 0 10px rgba(16, 185, 129, 0.5); }
+  50% { color: #34d399; text-shadow: 0 0 20px rgba(52, 211, 153, 0.8); }
+}
+
+.green-blink {
+  animation: green-blink 2s ease-in-out infinite;
+  color: #10b981;
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+/* Focus ring for accessibility */
+.focus-ring:focus {
+  outline: 2px solid rgba(255,255,255,0.12);
+  outline-offset: 2px;
+}
+
+/* Buttons refinement */
+.btn-primary {
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  color: #fff;
+  border-radius: .375rem;
+  padding: .6rem 1.25rem;
+  font-weight: 700;
+  transition: all .15s ease-in-out;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.5);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+}
+
+/* Form inputs */
+.input {
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: .75rem .9rem;
+  border-radius: 0.375rem;
+}
+
+/* Utility for subtle headings */
+.subtle-heading { color: #9aa3b2; }
+
+/* Utility to keep footer links at bottom */
+.page-footer { min-height: 180px; }
+
+/* About / Services specific styles */
+.about-hero { max-width: 900px; margin: 0 auto; }
+.about-grid { display: grid; grid-template-columns: repeat(1, minmax(0,1fr)); gap: 1.5rem; }
+
+@media (min-width: 640px) {
+  .about-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (min-width: 1024px) {
+  .about-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+.about-mission { text-align: center; }
+.timeline { display:flex; gap:1rem; padding: .5rem 0; }
+.timeline > div { min-width: 220px; padding: .75rem; background: rgba(255,255,255,0.02); border-radius: .5rem; }
+.case-study { display:flex; gap:1rem; align-items:center; }
+.case-study .meta { font-size: .9rem; color: #94a3b8 }
+.testimonials-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }
+.service-feature { padding: 1rem; border-radius: .5rem; background: rgba(255,255,255,0.02); transition: transform .18s ease, box-shadow .18s ease; }
+.service-feature:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(2,6,23,0.6); }
+.tech-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); gap:.5rem; }
+
+.ml-node { min-width: 64px; padding: .5rem .75rem; border-radius: .375rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04); }
+.ml-node .label { font-weight: 700; color: #fff; font-size: .9rem; }
+.ml-node .sub { font-size: .75rem; color: #9ca3af; }
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  /* Extra small screens */
+  .glass-card, .glass-panel {
+    backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Reduce animations on mobile for performance */
+  .floating-object, .btn-primary:hover, .download-card:hover {
+    animation: none;
+    transform: none !important;
+  }
+
+  /* Simplify hover effects */
+  .service-feature:hover, .glass-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Optimize text sizes */
+  .text-4xl { font-size: 1.875rem; }
+  .text-6xl { font-size: 2.25rem; }
+  .text-8xl { font-size: 3rem; }
+
+  /* Reduce padding on small screens */
+  .px-6 { padding-left: 1rem; padding-right: 1rem; }
+  .py-24 { padding-top: 3rem; padding-bottom: 3rem; }
+}
+
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: repeat(1, minmax(0,1fr)); }
+  .timeline { overflow-x:auto; padding-bottom: .5rem; }
+  .case-study { flex-direction: column; }
+
+  /* Reduce motion on tablets */
+  .floating-object {
+    animation-duration: 12s;
+  }
+}
+
+/* Small screens - maintain single-column stacking. Remove redundant two-column overrides. */
+
+/* Removed mobile overrides for `lg:` grid utilities so Tailwind's breakpoints apply naturally. */
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  .btn-primary, .glass-card, .service-feature {
+    transition: none;
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+}

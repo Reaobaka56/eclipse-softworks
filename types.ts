@@ -38,3 +38,11 @@ export interface DownloadItem {
   iconLetter: string;
   gradient: string;
 }
+
+export interface Testimonial {
+  name: string;
+  role: string;
+  company: string;
+  content: string;
+  avatar: string;
+}

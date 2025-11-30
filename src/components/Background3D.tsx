@@ -76,7 +76,7 @@ const Scene = () => {
 
   // Generate exactly 5 Big Donuts
   const donuts = useMemo(() => {
-    return new Array(5).fill(0).map((_, i) => ({
+    return new Array(5).fill(0).map((_, _i) => ({
       position: [
         (Math.random() - 0.5) * 40, // Spread out more in X to clear text area
         (Math.random() - 0.5) * 20, 
@@ -122,7 +122,7 @@ const Scene = () => {
 
 const Background3D: React.FC = () => {
   return (
-    <div className="fixed top-0 left-0 w-full h-full -z-10 bg-black">
+    <div aria-hidden="true" className="fixed top-0 left-0 w-full h-full -z-10 bg-black">
       <Canvas 
         shadows
         camera={{ position: [0, 0, 30], fov: 60 }} 

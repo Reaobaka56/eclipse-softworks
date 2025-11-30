@@ -1,17 +1,16 @@
-import { 
-  Code, Server, BarChart3, Brain, Activity, 
-  MessageSquare, PieChart, ShoppingCart, 
-  Smartphone, Globe, Terminal, Workflow
+import {
+  Server, BarChart3, Brain, Activity,
+  MessageSquare, PieChart, ShoppingCart,
+  Smartphone, Globe, Terminal
 } from 'lucide-react';
-import { NavItem, TeamMember, Service, Project, DownloadItem } from './types';
+import { NavItem, TeamMember, Service, Project, DownloadItem, Testimonial } from './types';
 
 export const NAV_ITEMS: NavItem[] = [
   { id: 'home', label: 'Home' },
-  { id: 'services', label: 'Services' },
-  { id: 'solutions', label: 'Solutions' },
-  { id: 'projects', label: 'Projects' },
   { id: 'about', label: 'About' },
-  { id: 'downloads', label: 'Downloads' },
+  { id: 'services', label: 'Services' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'team', label: 'Team' },
   { id: 'contact', label: 'Contact' },
 ];
 
@@ -142,7 +141,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'TensorFlow', 'React'],
     icon: Brain,
     status: 'Live',
-    statusColor: 'text-green-400 bg-green-500/20'
+    statusColor: 'text-gray-300 bg-white/5'
   },
   {
     title: 'Mobile Banking',
@@ -150,7 +149,7 @@ export const PROJECTS: Project[] = [
     tags: ['React Native', 'Node.js', 'MongoDB'],
     icon: Smartphone,
     status: 'In Development',
-    statusColor: 'text-blue-400 bg-blue-500/20'
+    statusColor: 'text-gray-300 bg-white/5'
   },
   {
     title: 'E-Commerce Platform',
@@ -158,9 +157,11 @@ export const PROJECTS: Project[] = [
     tags: ['Next.js', 'Stripe', 'PostgreSQL'],
     icon: ShoppingCart,
     status: 'Live',
-    statusColor: 'text-green-400 bg-green-500/20'
+    statusColor: 'text-gray-300 bg-white/5'
   }
 ];
+
+export const DARK_GRADIENT = 'from-zinc-800 to-black';
 
 export const DOWNLOADS: DownloadItem[] = [
   {
@@ -169,7 +170,7 @@ export const DOWNLOADS: DownloadItem[] = [
     description: 'A modern, high-performance programming language designed for system-level development.',
     platforms: ['Windows', 'Mac', 'Linux'],
     iconLetter: 'U',
-    gradient: 'from-purple-600 to-blue-600'
+    gradient: DARK_GRADIENT
   },
   {
     name: 'Kasi Meals',
@@ -177,6 +178,30 @@ export const DOWNLOADS: DownloadItem[] = [
     description: 'Comprehensive meal planning application connecting communities with authentic cuisine.',
     platforms: ['Android', 'iOS', 'Web'],
     iconLetter: 'K',
-    gradient: 'from-green-600 to-orange-600'
+    gradient: DARK_GRADIENT
+  }
+];
+
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    name: 'Sarah Johnson',
+    role: 'CTO, TechCorp Africa',
+    company: 'TechCorp Africa',
+    content: 'Eclipse Softworks transformed our data infrastructure with their AI-powered analytics platform. The results exceeded our expectations, delivering 40% improvement in decision-making speed.',
+    avatar: 'SJ'
+  },
+  {
+    name: 'Michael Chen',
+    role: 'Founder, InnovateLabs',
+    company: 'InnovateLabs',
+    content: 'Working with Eclipse Softworks was a game-changer for our startup. Their expertise in AI and commitment to understanding African markets helped us launch a product that truly resonates with our users.',
+    avatar: 'MC'
+  },
+  {
+    name: 'Dr. Nomsa Zulu',
+    role: 'Head of Digital Transformation, HealthNet SA',
+    company: 'HealthNet SA',
+    content: 'The machine learning models developed by Eclipse Softworks have revolutionized our patient care prediction system. Their technical excellence and local market insight are unmatched.',
+    avatar: 'NZ'
   }
 ];
