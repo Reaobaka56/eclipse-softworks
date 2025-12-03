@@ -85,10 +85,11 @@ jobs:
       run: npm run build
 
     - name: Run Lighthouse
-      uses: treosh/lighthouse-ci-action@v10
+      uses: treosh/lighthouse-ci-action@v12
       with:
         urls: http://localhost:3000
         configPath: .lighthouserc.json
+        artifactName: lighthouse-report-${{ github.run_id }}
         uploadArtifacts: true
         temporaryPublicStorage: true
 
