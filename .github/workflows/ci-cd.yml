@@ -100,16 +100,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
       with:
-        name: build-files
-        path: dist/
-
-    - name: Deploy to Netlify
-      uses: netlify/actions/cli@master
-      with:
-        args: deploy --dir=dist --prod
-      env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: .
+        prod: true
