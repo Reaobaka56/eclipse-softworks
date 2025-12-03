@@ -68,7 +68,7 @@ export const DEVELOPMENT_TEAM: TeamMember[] = [
   },
   { 
     initials: 'KM', 
-    name: 'Karabo Makgala', 
+    name: 'Karabo Mothapo', 
     role: 'Security Engineer',
     specialty: 'Cybersecurity',
     description: 'Karabo is a security engineer focused on ensuring the safety, integrity, and privacy of all digital systems built by Eclipse Softworks.',
