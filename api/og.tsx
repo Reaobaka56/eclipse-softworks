@@ -11,6 +11,11 @@ export default async function handler(request: Request) {
   const title = searchParams.get('title') || 'Build Intelligence';
   const subtitle = searchParams.get('subtitle') || 'AI Solutions & Custom Software Development';
 
+  // Fetch the logo image
+  const logoUrl = new URL('/img/logo-512.png', request.url).toString();
+  const logoData = await fetch(logoUrl).then((res) => res.arrayBuffer());
+  const logoBase64 = `data:image/png;base64,${Buffer.from(logoData).toString('base64')}`;
+
   return new ImageResponse(
     (
       <div
@@ -39,32 +44,16 @@ export default async function handler(request: Request) {
           }}
         />
         
-        {/* Logo circle with initials */}
-        <div
+        {/* Logo image */}
+        <img
+          src={logoBase64}
+          width={140}
+          height={140}
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 120,
-            height: 120,
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #27272a 0%, #000000 100%)',
-            border: '2px solid rgba(255,255,255,0.1)',
             marginBottom: 40,
-            boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+            borderRadius: 24,
           }}
-        >
-          <span
-            style={{
-              fontSize: 48,
-              fontWeight: 700,
-              color: '#ffffff',
-              letterSpacing: '-2px',
-            }}
-          >
-            ES
-          </span>
-        </div>
+        />
         
         {/* Company name */}
         <div
