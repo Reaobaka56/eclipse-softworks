@@ -58,7 +58,9 @@ const ServiceBadge: React.FC<ServiceBadgeProps> = ({ icon, label, variant = 'def
     return iconMap[iconName] || null;
   };
   
-  const LucideIconComponent = isLucideComponent ? (icon as LucideIcon) : getLucideIcon(icon as string);
+  const LucideIconComponent = isLucideComponent
+    ? (icon as LucideIcon)
+    : getLucideIcon(icon as string) || Sparkles;
   
   const variantClasses = {
     default: 'bg-white/15 text-gray-200 border-white/20',
@@ -73,11 +75,7 @@ const ServiceBadge: React.FC<ServiceBadgeProps> = ({ icon, label, variant = 'def
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
     >
-      {LucideIconComponent ? (
-        <LucideIconComponent size={14} aria-hidden="true" />
-      ) : (
-        <i className={`${icon} text-sm`} aria-hidden="true"></i>
-      )}
+      <LucideIconComponent size={14} aria-hidden="true" />
       {label && <span>{label}</span>}
     </motion.div>
   );

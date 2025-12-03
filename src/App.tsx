@@ -328,9 +328,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
                       }}
                     >
-                        {COMPANY_STATS.map((stat, i) => (
+                        {COMPANY_STATS.map((stat) => (
                             <motion.div 
-                              key={i} 
+                          key={stat.label}
                               className="text-center glass-card p-6"
                               whileHover={{ scale: 1.05, y: -5 }}
                               transition={{ duration: 0.2 }}
@@ -389,9 +389,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         }
                       }}
                     >
-                        {SERVICES.slice(0, 3).map((service, i) => (
+                        {SERVICES.slice(0, 3).map((service) => (
                             <motion.div
-                              key={i}
+                          key={service.title}
                               className="glass-card p-6 md:p-8 lg:p-10 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10 h-full min-h-[260px] flex flex-col justify-between"
                               variants={{
                                 hidden: { opacity: 0, y: 50, scale: 0.9 },
@@ -502,9 +502,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         }
                       }}
                     >
-                        {TESTIMONIALS.map((testimonial, i) => (
+                        {TESTIMONIALS.map((testimonial) => (
                             <motion.div 
-                              key={i} 
+                          key={testimonial.name}
                               className="glass-card p-8"
                               variants={{
                                 hidden: { opacity: 0, y: 50, scale: 0.9 },
@@ -1309,7 +1309,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                         "24/7 support and maintenance"
                                     ].map((text, i) => (
                                         <motion.li 
-                                          key={i} 
+                                      key={text}
                                           className="flex items-start gap-3"
                                           variants={{
                                             hidden: { opacity: 0, x: -20 },
@@ -1349,9 +1349,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                     { icon: "robot", title: "AI Integration", desc: "Implement cutting-edge AI solutions tailored to your business needs." },
                                     { icon: "mobile-alt", title: "Mobile Development", desc: "Native and cross-platform mobile applications that deliver exceptional user experiences." },
                                     { icon: "shield-alt", title: "Cybersecurity", desc: "Protect your digital assets with our comprehensive security solutions." }
-                                ].map((item, i) => (
+                                  ].map((item, i) => (
                                     <motion.div 
-                                      key={i} 
+                                    key={item.title}
                                       className="glass-card p-4 text-center transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10"
                                       variants={{
                                         hidden: { opacity: 0, y: 30, scale: 0.9 },
@@ -1538,8 +1538,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                         { icon: "brain", title: "AI-Powered Innovation", desc: "Leverage artificial intelligence to automate processes, enhance productivity, and unlock new opportunities." },
                                         { icon: "code", title: "Custom Application Development", desc: "Build scalable, robust applications tailored to your specific business requirements." },
                                         { icon: "user-check", title: "Exceptional User Experiences", desc: "Create memorable digital experiences that engage your customers and drive business success." }
-                                    ].map((item, i) => (
-                                        <div key={i} className="flex items-start gap-4">
+                                    ].map((item) => (
+                                      <div key={item.title} className="flex items-start gap-4">
                                             <DynamicIcon name={item.icon} size={20} className="text-gray-300 mt-1 flex-shrink-0" />
                                             <div>
                                                 <h3 className="font-bold mb-2">{item.title}</h3>
@@ -1631,9 +1631,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         }
                       }}
                     >
-                        {GITHUB_PROJECTS.map((proj, i) => (
+                        {GITHUB_PROJECTS.map((proj) => (
                             <motion.div 
-                              key={i}
+                          key={proj.github}
                               id={proj.title.toLowerCase().replace(/\s+/g, '-')}
                               className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10 flex flex-col h-full"
                               variants={{
@@ -1725,6 +1725,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                               src="/img/logo.svg" 
                               alt="Eclipse Softworks Logo" 
                               className="w-20 h-20 mx-auto mb-8 object-contain"
+                              loading="lazy"
+                              decoding="async"
                             />
                             
                             <h2 className="text-4xl font-bold text-white mb-6">About Eclipse Softworks</h2>
@@ -1735,8 +1737,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                     </div>
 
                     <div className="about-grid mb-20">
-                      {COMPANY_VALUES.map((item, i) => (
-                        <div key={i} className="glass-card p-8 text-center about-mission transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
+                      {COMPANY_VALUES.map((item) => (
+                        <div key={item.title} className="glass-card p-8 text-center about-mission transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
                           <div className="flex justify-center mb-4">
                             <DynamicIcon name={item.icon} size={32} className="text-gray-300" />
                           </div>
@@ -1776,8 +1778,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         <h3 className="text-xl font-bold text-white mb-4">Our Journey</h3>
                         <p className="text-gray-400 mb-4">Milestones of Eclipse Softworks' growth and impact.</p>
                             <div className="flex overflow-x-auto gap-4 py-4" role="list" aria-label="Company timeline milestones">
-                          {COMPANY_MILESTONES.map((milestone, i) => (
-                                    <div key={i} role="listitem" className="min-w-[220px] p-4 bg-white/15 rounded-md">
+                          {COMPANY_MILESTONES.map((milestone) => (
+                                    <div key={`${milestone.year}-${milestone.title}`} role="listitem" className="min-w-[220px] p-4 bg-white/15 rounded-md">
                               <div className="text-xs text-gray-500 mb-2">{milestone.year}</div>
                               <div className="font-bold text-white mb-1">{milestone.title}</div>
                               <div className="text-xs text-gray-400">{milestone.desc}</div>
@@ -1796,8 +1798,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {GITHUB_PROJECTS.slice(0, 3).map((proj, i) => (
-                                <div key={i} className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
+                            {GITHUB_PROJECTS.slice(0, 3).map((proj) => (
+                              <div key={proj.github} className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
                                     <div className="h-48 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/20 relative">
                                         <DynamicIcon name={proj.icon} size={48} className="text-gray-700" />
                                         {proj.stars > 0 && (
@@ -1833,8 +1835,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                       <div className="mb-16">
                         <h3 className="text-2xl font-bold text-white mb-6">What our clients say</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          {TESTIMONIALS.slice(0,3).map((t, i) => (
-                            <div key={i} className="glass-card p-6 text-sm text-gray-400">
+                          {TESTIMONIALS.slice(0,3).map((t) => (
+                            <div key={t.name} className="glass-card p-6 text-sm text-gray-400">
                               <p className="italic text-gray-300 mb-3">"{t.content}"</p>
                               <cite className="text-xs text-gray-500">— {t.name}, {t.role} at {t.company}</cite>
                             </div>
@@ -1854,8 +1856,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {RESOURCES.map((res, i) => (
-                                <div key={i} className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
+                            {RESOURCES.map((res) => (
+                              <div key={res.title} className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
                                     <div className="h-32 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/20">
                                         <DynamicIcon name={res.icon} size={32} className="text-gray-600" />
                                     </div>
@@ -1881,8 +1883,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                             <div>
                                 <h3 className="text-2xl font-bold mb-6">Why Choose Us</h3>
                                 <ul className="space-y-4">
-                                    {WHY_CHOOSE_US.map((item, i) => (
-                                        <li key={i} className="flex items-start gap-3">
+                                    {WHY_CHOOSE_US.map((item) => (
+                                      <li key={item.title} className="flex items-start gap-3">
                                             <div className="w-5 h-5 flex items-center justify-center rounded-full bg-white/15 mt-1">
                                                 <CheckCircle size={12} className="text-gray-300" />
                                             </div>
@@ -1972,9 +1974,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                           whileHover={{ scale: 1.05 }}
                         >Leadership</motion.h3>
                         <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                            {LEADERSHIP_TEAM.map((member, i) => (
+                                {LEADERSHIP_TEAM.map((member, i) => (
                                 <motion.div
-                                  key={i}
+                                  key={member.name}
                                   id={member.name.toLowerCase().replace(/\s+/g, '-')}
                                   className="glass-card p-8 text-center group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10"
                                   variants={{
@@ -2047,9 +2049,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                           whileHover={{ scale: 1.05 }}
                         >Development Team</motion.h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {DEVELOPMENT_TEAM.map((member, i) => (
+                                {DEVELOPMENT_TEAM.map((member, i) => (
                                 <motion.div
-                                  key={i}
+                                  key={member.name}
                                   id={member.name.toLowerCase().replace(/\s+/g, '-')}
                                   className="glass-card p-6 text-center group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10"
                                   variants={{
@@ -2095,10 +2097,10 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                     >{member.specialty}</motion.p>
                                     <p className="text-sm text-gray-400 mb-4 leading-relaxed">{member.description}</p>
                                     {member.skills && (
-                                      <div className="flex flex-wrap gap-1 justify-center mb-4">
-                                          {member.skills.map((skill, skillIndex) => (
+                                        <div className="flex flex-wrap gap-1 justify-center mb-4">
+                                          {member.skills.map((skill) => (
                                               <motion.span
-                                                key={skillIndex}
+                                                key={`${member.name}-${skill}`}
                                                 className="text-xs px-2 py-1 bg-white/10 rounded-full"
                                                 whileHover={{
                                                   scale: 1.1,
@@ -2128,9 +2130,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                           whileHover={{ scale: 1.05 }}
                         >Business Operations</motion.h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                            {BUSINESS_TEAM.map((member, i) => (
+                                {BUSINESS_TEAM.map((member, i) => (
                                 <motion.div
-                                  key={i}
+                                  key={member.name}
                                   id={member.name.toLowerCase().replace(/\s+/g, '-')}
                                   className="glass-card p-6 text-center group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10"
                                   variants={{
@@ -2210,12 +2212,12 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                             {[
-                                { icon: "users", title: "Collaboration", desc: "We work together across disciplines to achieve extraordinary results." },
-                                { icon: "lightbulb", title: "Innovation", desc: "We embrace new ideas and technologies to solve complex challenges." },
-                                { icon: "heart", title: "Impact", desc: "We build solutions that create real value for our clients and communities." }
-                            ].map((value, i) => (
+                              { icon: "users", title: "Collaboration", desc: "We work together across disciplines to achieve extraordinary results." },
+                              { icon: "lightbulb", title: "Innovation", desc: "We embrace new ideas and technologies to solve complex challenges." },
+                              { icon: "heart", title: "Impact", desc: "We build solutions that create real value for our clients and communities." }
+                            ].map((value) => (
                                 <motion.div
-                                  key={i}
+                              key={value.title}
                                   className="text-center"
                                   whileHover={{ y: -5 }}
                                 >

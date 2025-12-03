@@ -1,11 +1,16 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, fireEvent, within } from '@testing-library/react';
 import Footer from '../Footer';
 
 describe('Footer', () => {
   it('renders branding and CTA, and calls onNav when links and CTA are clicked', () => {
     const navMock = vi.fn();
-    const { getByLabelText, getByRole } = render(<Footer onNav={navMock} />);
+    const { getByRole } = render(
+      <MemoryRouter>
+        <Footer onNav={navMock} />
+      </MemoryRouter>
+    );
     const footer = getByRole('contentinfo');
     const utils = within(footer);
 
@@ -24,7 +29,7 @@ describe('Footer', () => {
     expect(navMock).toHaveBeenCalledWith('services');
 
     // Request Architecture CTA
-    const requestBtn = getByLabelText(/Request Architecture Consultation/i);
+    const requestBtn = utils.getByRole('button', { name: /contact/i });
     fireEvent.click(requestBtn);
     expect(navMock).toHaveBeenCalledWith('contact');
   });

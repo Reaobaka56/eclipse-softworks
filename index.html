@@ -22,7 +22,6 @@
     <!-- DNS Prefetch & Preconnect for Performance -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
@@ -54,7 +53,7 @@
     <meta name="twitter:image:alt" content="Eclipse Softworks - Build Intelligence with AI" />
 
     <!-- JSON-LD Structured Data - Organization -->
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="eclipse-secure">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
@@ -110,7 +109,7 @@
     </script>
 
     <!-- JSON-LD Structured Data - WebSite with SearchAction -->
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="eclipse-secure">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
@@ -126,7 +125,7 @@
     </script>
 
     <!-- JSON-LD Structured Data - LocalBusiness -->
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="eclipse-secure">
     {
       "@context": "https://schema.org",
       "@type": "ProfessionalService",
@@ -195,19 +194,19 @@
     <link rel="icon" type="image/svg+xml" href="/img/logo.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="shortcut icon" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
 
     <!-- Fonts with font-display: swap for better performance -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" as="style" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     <noscript>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
     </noscript>
     
-    <!-- Font Awesome with SRI -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo16qeRV/s4TqnMwPQVc7UYaE/F1HqXH5nIUjPCg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="antialiased dark bg-black text-white">
 <!-- Skip to main content link for accessibility -->
@@ -217,7 +216,7 @@
 
 <!-- Google Analytics 4 with Consent Mode -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9F7XVSMNFW"></script>
-<script>
+<script nonce="eclipse-secure">
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   

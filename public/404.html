@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page Not Found | Eclipse Softworks</title>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+      background: radial-gradient(circle at 25% 25%, #1a1a2e 0%, #050505 60%);
+      color: #f8fafc;
+      padding: 2rem;
+    }
+    .card {
+      width: min(520px, 100%);
+      background: rgba(15, 15, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 2.5rem;
+      position: relative;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.65);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(147, 197, 253, 0.3);
+    }
+    h1 {
+      font-size: clamp(2.25rem, 3vw, 3rem);
+      margin: 1.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    p {
+      margin: 0 0 1.5rem;
+      color: #cbd5f5;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem;
+      display: grid;
+      gap: 0.6rem;
+    }
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      color: #94a3b8;
+    }
+    li::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    a.button, button.button {
+      border: none;
+      text-decoration: none;
+      padding: 0.85rem 1.4rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    a.button.primary {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
+    }
+    a.button.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    a.button:hover, button.button:hover {
+      transform: translateY(-2px);
+    }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+    footer a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main class="card" aria-labelledby="not-found-title">
+    <span class="badge">Error 404</span>
+    <h1 id="not-found-title">We can't find that page.</h1>
+    <p>The link you followed may be broken or the page may have been moved. Choose one of these options so you can keep exploring Eclipse Softworks.</p>
+    <ul>
+      <li>Return to the homepage and explore our services.</li>
+      <li>Review our privacy policy or terms of service.</li>
+      <li>Contact our team if you need a custom AI solution.</li>
+    </ul>
+    <div class="actions">
+      <a class="button primary" href="/">Back to homepage</a>
+      <a class="button secondary" href="/privacy.html">Privacy Policy</a>
+      <a class="button secondary" href="/terms.html">Terms of Service</a>
+    </div>
+    <footer>
+      Need help? <a href="mailto:info@eclipse-softworks.com">info@eclipse-softworks.com</a>
+    </footer>
+  </main>
+</body>
+</html>
