@@ -27,7 +27,7 @@ export const LEADERSHIP_TEAM: TeamMember[] = [
     initials: 'MK', 
     name: 'Moon Khumalo', 
     role: 'Founder & CEO',
-    specialty: 'AI Systems and Backend',
+    specialty: 'AI Systems & Backend',
     description: 'Moon is the visionary founder and CEO of Eclipse Softworks, specializing in AI systems and backend infrastructure. He leads the team with innovation and purpose.',
     linkedin: '#'
   },
