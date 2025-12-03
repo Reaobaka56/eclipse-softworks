@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { NAV_ITEMS } from '../../constants';
 import { Mail, Phone, Linkedin, Twitter, Github, ArrowUp, Activity } from 'lucide-react';
 
 const Footer: React.FC<{ onNav: (id: string) => void }> = ({ onNav }) => {
