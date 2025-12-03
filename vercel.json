@@ -63,7 +63,27 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api|_next|static|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    },
+    {
+      "source": "/privacy.html",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/terms.html",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/favicon-32x32.png"
+    },
+    {
+      "source": "/((?!api|_next|static|img|assets|favicon|robots|sitemap|privacy|terms|manifest|.*\\..*).*)",
       "destination": "/index.html"
     }
   ],

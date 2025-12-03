@@ -121,3 +121,4 @@ temp/
 
 # Turbo
 .turbo
+.env*.local
