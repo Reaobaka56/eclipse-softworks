@@ -1,11 +1,21 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Toast from './components/Toast';
 import { postContact } from './services/contact';
 import LoadingSpinner from './components/LoadingSpinner';
 import { motion } from 'framer-motion';
-import { DARK_GRADIENT, TESTIMONIALS, SERVICES } from '../constants';
+import { DARK_GRADIENT, TESTIMONIALS, SERVICES, GITHUB_PROJECTS } from '../constants';
 import Footer from './components/Footer';
+import { useAnalytics } from './services/analytics';
+import { 
+  BarChart3, Brain, Smartphone, Shield, Code, Users, Target, Eye, Heart,
+  Factory, MessageSquare, PieChart, Cpu, Server, Globe, Zap, Layers,
+  GitBranch, Database, Cloud, Lock, Sparkles, Rocket, Award, CheckCircle,
+  ArrowRight, Calendar, ChevronRight, Bell, Info, Terminal, Wifi, Link,
+  Box, BookOpen, ShoppingCart, Lightbulb, Linkedin, Mail, Phone, MapPin,
+  Star, Github, Download
+} from 'lucide-react';
 
 // Lazy load heavy components for better mobile performance
 const MetallicBackground = lazy(() => import('./components/MetallicBackground'));
@@ -14,26 +24,124 @@ const MLInfrastructureCard = lazy(() => import('./components/MLInfrastructureCar
 const ServiceBadge = lazy(() => import('./components/ServiceBadge'));
 const StatsCounter = lazy(() => import('./components/StatsCounter'));
 const TechStack = lazy(() => import('./components/TechStack'));
+const EnterpriseCTA = lazy(() => import('./components/EnterpriseCTA'));
+const TrustSignals = lazy(() => import('./components/TrustSignals'));
+const DemoBookingModal = lazy(() => import('./components/DemoBooking'));
+const DemoCTA = lazy(() => import('./components/DemoCTA'));
+const CookieConsent = lazy(() => import('./components/CookieConsent'));
 
-const App: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<string>('home');
+// Icon map for dynamic icon rendering
+const iconMap: Record<string, React.ElementType> = {
+  'chart-line': BarChart3,
+  'robot': Cpu,
+  'mobile-alt': Smartphone,
+  'shield-alt': Shield,
+  'chart-bar': BarChart3,
+  'brain': Brain,
+  'code': Code,
+  'user-check': Users,
+  'industry': Factory,
+  'comments': MessageSquare,
+  'chart-pie': PieChart,
+  'bullseye': Target,
+  'eye': Eye,
+  'heart': Heart,
+  'terminal': Terminal,
+  'bell': Bell,
+  'info': Info,
+  'wifi': Wifi,
+  'link': Link,
+  'cube': Box,
+  'book': BookOpen,
+  'shopping-cart': ShoppingCart,
+  'lightbulb': Lightbulb,
+  'users': Users,
+  'linkedin': Linkedin,
+  'server': Server,
+  'globe': Globe,
+  'zap': Zap,
+  'database': Database,
+  'cloud': Cloud,
+  'lock': Lock,
+  'sparkles': Sparkles,
+  'rocket': Rocket,
+  'award': Award,
+  'check': CheckCircle,
+  'layers': Layers,
+  'git-branch': GitBranch,
+  'arrow-right': ArrowRight,
+  'calendar': Calendar,
+  'chevron-right': ChevronRight,
+};
+
+// Helper to render icon by name
+const DynamicIcon: React.FC<{ name: string; size?: number; className?: string }> = ({ name, size = 24, className = '' }) => {
+  const IconComponent = iconMap[name] || Sparkles;
+  return <IconComponent size={size} className={className} />;
+};
+
+// Section to route mapping for SEO-friendly URLs
+const sectionRoutes: Record<string, string> = {
+  home: '/',
+  about: '/about',
+  services: '/services',
+  solutions: '/solutions',
+  projects: '/projects',
+  team: '/team',
+  downloads: '/downloads',
+  contact: '/contact',
+};
+
+// Route to section mapping
+const routeToSection: Record<string, string> = {
+  '/': 'home',
+  '/about': 'about',
+  '/services': 'services',
+  '/solutions': 'solutions',
+  '/projects': 'projects',
+  '/team': 'team',
+  '/downloads': 'downloads',
+  '/contact': 'contact',
+};
+
+interface AppProps {
+  initialSection?: string;
+}
+
+const App: React.FC<AppProps> = ({ initialSection }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { trackPageView, trackEvent, trackClick: _trackClick, getRecommendations, prefersReducedMotion: _prefersReducedMotion } = useAnalytics();
+  
+  // Determine initial section from route or prop
+  const getInitialSection = () => {
+    if (initialSection) return initialSection;
+    return routeToSection[location.pathname] || 'home';
+  };
+  
+  const [activeSection, setActiveSection] = useState<string>(getInitialSection());
   const [scrollTarget, setScrollTarget] = useState<string | null>(null);
+  const [_recommendations] = useState<string[]>(getRecommendations ? getRecommendations() : []);
     // Header now manages mobile menu state internally
     // contact form state
     const [contactName, setContactName] = useState('');
     const [contactEmail, setContactEmail] = useState('');
     const [contactMessage, setContactMessage] = useState('');
+    const [contactHoneypot, setContactHoneypot] = useState(''); // Hidden field for bot detection
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [toast, setToast] = useState<{type: 'success'|'error'|'info'; message: string} | null>(null);
+    const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
     const isFormValid = contactName.trim().length > 0 && contactEmail.includes('@') && contactMessage.trim().length > 0;
 
-    const getStatusClasses = (color: string) => {
-      // Always return neutral gray-only palette for status badges so the site remains dark-themed
-      if (!color) return 'bg-white/5 text-gray-300';
-      if (color === 'green') return 'bg-green-500/20 text-green-400 green-blink';
-      if (color.includes('bg-') || color.includes('text-')) return color;
-      return 'bg-white/5 text-gray-300';
-    };
+  // Sync activeSection with route changes
+  useEffect(() => {
+    const sectionFromRoute = routeToSection[location.pathname];
+    if (sectionFromRoute && sectionFromRoute !== activeSection) {
+      setActiveSection(sectionFromRoute);
+    }
+    // Track page view on route change
+    trackPageView?.(location.pathname);
+  }, [location.pathname]);
 
   // Scroll to top when active section changes
   useEffect(() => {
@@ -51,7 +159,13 @@ const App: React.FC = () => {
     }
   }, [activeSection, scrollTarget]);
 
+    // Navigation handler that updates URL and section
     const handleNavClick = (sectionId: string, scrollTo?: string) => {
+      const route = sectionRoutes[sectionId] || '/';
+      navigate(route);
+      // Track navigation as user interaction
+      trackEvent?.('navigation', 'click', sectionId);
+      navigate(route);
       setActiveSection(sectionId);
       if (scrollTo) setScrollTarget(scrollTo);
     };
@@ -89,13 +203,13 @@ const App: React.FC = () => {
                     }}
                   >
                       <motion.div 
-                        className="inline-flex items-center gap-3 px-3 py-1 mb-8 border border-white/10 bg-white/5 rounded-full backdrop-blur-md"
+                        className="inline-flex items-center gap-3 px-3 py-1 mb-8 border border-white/20 bg-white/15 rounded-full backdrop-blur-md"
                         variants={{
                           hidden: { opacity: 0, y: 20 },
                           visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
                         }}
                       >
-                          <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-pulse"></span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse"></span>
                           <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest green-blink">Now Accepting New Clients</span>
                       </motion.div>
 
@@ -177,7 +291,7 @@ const App: React.FC = () => {
                     animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                     transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
                   >
-                      <Suspense fallback={<div className="w-full h-48 bg-black/50 rounded flex items-center justify-center"><LoadingSpinner size="lg" /></div>}>
+                      <Suspense fallback={<div className="w-full h-48 bg-black/70 rounded flex items-center justify-center"><LoadingSpinner size="lg" /></div>}>
                         <NeuralCard />
                       </Suspense>
                   </motion.div>
@@ -210,9 +324,9 @@ const App: React.FC = () => {
                       }}
                     >
                         {[
-                            { val: "50+", label: "Projects Completed" },
-                            { val: "15+", label: "Team Members" },
-                            { val: "5+", label: "Years Experience" },
+                            { val: "3+", label: "Projects Completed" },
+                            { val: "10+", label: "Team Members" },
+                            { val: "1+", label: "Years Experience" },
                             { val: "100%", label: "Client Satisfaction" }
                         ].map((stat, i) => (
                             <motion.div 
@@ -233,7 +347,7 @@ const App: React.FC = () => {
           {/* Featured Services Preview - Home */}
           {activeSection === 'home' && (
             <motion.section 
-              className="py-24 px-6 relative z-10 border-t border-white/5"
+              className="py-24 px-6 relative z-10 border-t border-white/15"
               initial="hidden"
               animate="visible"
               variants={{
@@ -313,7 +427,7 @@ const App: React.FC = () => {
                                 </p>
                                 <motion.button 
                                   onClick={() => handleNavClick('services', service.title.toLowerCase().replace(/\s+/g, '-'))} 
-                                  className="text-xs font-bold uppercase tracking-wider border-b border-white/50 pb-0.5 hover:text-white hover:border-white transition-all"
+                                  className="text-xs font-bold uppercase tracking-wider border-b border-white/150 pb-0.5 hover:text-white hover:border-white transition-all"
                                   whileHover={{ x: 5 }}
                                   whileTap={{ scale: 0.95 }}
                                 >
@@ -346,7 +460,7 @@ const App: React.FC = () => {
           {/* Testimonials Section - Home */}
           {activeSection === 'home' && (
             <motion.section 
-              className="py-24 px-6 relative z-10 border-t border-white/5 bg-gradient-to-b from-transparent to-black/20"
+              className="py-24 px-6 relative z-10 border-t border-white/15 bg-gradient-to-b from-transparent to-black/20"
               initial="hidden"
               animate="visible"
               variants={{
@@ -433,7 +547,7 @@ const App: React.FC = () => {
           {/* Call to Action Section - Home */}
           {activeSection === 'home' && (
             <motion.section 
-              className="py-24 px-6 relative z-10 border-t border-white/5"
+              className="py-24 px-6 relative z-10 border-t border-white/15"
               initial="hidden"
               animate="visible"
               variants={{
@@ -455,7 +569,9 @@ const App: React.FC = () => {
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
                       }}
                     >
-                        <h2 className="text-4xl font-bold text-white mb-4 green-blink">Ready to Transform Your Business?</h2>
+                        <h2 className="text-4xl font-bold mb-4">
+                          <span className="bg-gradient-to-r from-[#60a5fa] via-[#34d399] via-[#a78bfa] via-[#38bdf8] via-[#f0f9ff] to-[#818cf8] bg-clip-text text-transparent">Ready to Transform Your Business?</span>
+                        </h2>
                         <p className="text-xl text-gray-400 mb-8">
                             Join the growing number of African businesses leveraging AI and cutting-edge technology for competitive advantage.
                         </p>
@@ -489,10 +605,34 @@ const App: React.FC = () => {
             </motion.section>
           )}
 
+          {/* Trust Signals Section - Home */}
+          {activeSection === 'home' && (
+            <Suspense fallback={<div className="py-16" />}>
+              <TrustSignals />
+            </Suspense>
+          )}
+
+          {/* Enterprise CTA Section - Home */}
+          {activeSection === 'home' && (
+            <Suspense fallback={<div className="py-16" />}>
+              <EnterpriseCTA />
+            </Suspense>
+          )}
+
+          {/* Demo CTA Section - Home */}
+          {activeSection === 'home' && (
+            <Suspense fallback={<div className="py-16" />}>
+              <DemoCTA onOpenDemo={() => {
+                setIsDemoModalOpen(true);
+                trackEvent?.('demo', 'open', 'demo_cta');
+              }} />
+            </Suspense>
+          )}
+
           {/* Services Section */}
           {activeSection === 'services' && (
             <motion.section 
-              className="py-24 px-6 relative z-10 border-t border-white/10"
+              className="py-24 px-6 relative z-10 border-t border-white/20"
               initial="hidden"
               animate="visible"
               variants={{
@@ -508,7 +648,7 @@ const App: React.FC = () => {
             >
                 <div className="max-w-7xl mx-auto">
                     <motion.div 
-                      className="mb-16 border-b border-white/10 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
+                      className="mb-16 border-b border-white/20 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
                       variants={{
                         hidden: { opacity: 0, y: 30 },
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -579,17 +719,19 @@ const App: React.FC = () => {
                             transition: { duration: 0.2 }
                           }}
                         >
-                            <motion.i 
-                              className="fa-solid fa-brain text-2xl mb-6 text-gray-300 group-hover:text-white transition-colors"
+                            <motion.div 
+                              className="flex justify-center mb-6"
                               whileHover={{ 
                                 scale: 1.1,
                                 rotate: 5,
                                 transition: { duration: 0.2 }
                               }}
-                            ></motion.i>
+                            >
+                              <Brain size={28} className="text-gray-300 group-hover:text-white transition-colors" />
+                            </motion.div>
                             <div className="flex items-center gap-3">
                               <h3 className="text-lg font-bold mb-3">AI-Powered Solutions</h3>
-                              <ServiceBadge icon="fa-brands fa-python" label="ML" />
+                              <ServiceBadge icon="python" label="ML" />
                             </div>
                             <p className="text-sm text-gray-400 leading-relaxed">
                                 Leverage the power of machine learning and deep learning to automate tasks, optimize processes, and enhance decision-making.
@@ -622,17 +764,19 @@ const App: React.FC = () => {
                             transition: { duration: 0.2 }
                           }}
                         >
-                            <motion.i 
-                              className="fa-solid fa-globe text-2xl mb-6 text-gray-300 group-hover:text-white transition-colors"
+                            <motion.div 
+                              className="flex justify-center mb-6"
                               whileHover={{ 
                                 scale: 1.1,
                                 rotate: -5,
                                 transition: { duration: 0.2 }
                               }}
-                            ></motion.i>
+                            >
+                              <Globe size={28} className="text-gray-300 group-hover:text-white transition-colors" />
+                            </motion.div>
                             <div className="flex items-center gap-3">
                               <h3 className="text-lg font-bold mb-3">Web Development</h3>
-                              <ServiceBadge icon="fa-brands fa-react" label="React" />
+                              <ServiceBadge icon="react" label="React" />
                             </div>
                             <p className="text-sm text-gray-400 leading-relaxed">
                                 Modern, responsive web applications built with cutting-edge technologies and optimized for performance and user experience.
@@ -664,17 +808,19 @@ const App: React.FC = () => {
                             transition: { duration: 0.2 }
                           }}
                         >
-                            <motion.i 
-                              className="fa-solid fa-mobile-screen-button text-2xl mb-6 text-gray-300 group-hover:text-white transition-colors"
+                            <motion.div 
+                              className="flex justify-center mb-6"
                               whileHover={{ 
                                 scale: 1.1,
                                 rotate: 5,
                                 transition: { duration: 0.2 }
                               }}
-                            ></motion.i>
+                            >
+                              <Smartphone size={28} className="text-gray-300 group-hover:text-white transition-colors" />
+                            </motion.div>
                             <div className="flex items-center gap-3">
                               <h3 className="text-lg font-bold mb-3">Mobile App Development</h3>
-                              <ServiceBadge icon="fa-solid fa-mobile-screen" label="Mobile" />
+                              <ServiceBadge icon="mobile" label="Mobile" />
                             </div>
                             <p className="text-sm text-gray-400 leading-relaxed">
                                 Cross-platform mobile applications built with performance and user experience at the forefront.
@@ -708,32 +854,34 @@ const App: React.FC = () => {
                         >
                             <div className="flex flex-col md:flex-row gap-8">
                                 <div className="flex-1">
-                                    <motion.i 
-                                      className="fa-solid fa-terminal text-2xl mb-6 text-gray-300 group-hover:text-white transition-colors"
+                                    <motion.div 
+                                      className="flex justify-start mb-6"
                                       whileHover={{ 
                                         scale: 1.1,
                                         rotate: -5,
                                         transition: { duration: 0.2 }
                                       }}
-                                    ></motion.i>
+                                    >
+                                      <Code size={28} className="text-gray-300 group-hover:text-white transition-colors" />
+                                    </motion.div>
                                     <div className="flex items-center gap-3">
                                       <h3 className="text-lg font-bold mb-3">Custom Software Engineering</h3>
-                                      <ServiceBadge icon="fa-solid fa-terminal" label="SaaS" />
+                                      <ServiceBadge icon="terminal" label="SaaS" />
                                     </div>
                                     <p className="text-sm text-gray-400 leading-relaxed mb-4">
                                         We tailor software solutions for your specific business needs, whether it's an internal system or a SaaS product.
                                     </p>
                                     <motion.button 
                                       onClick={() => handleNavClick('contact')} 
-                                      className="text-xs font-bold uppercase tracking-wider border-b border-white/50 pb-0.5 hover:text-white hover:border-white transition-all"
+                                      className="text-xs font-bold uppercase tracking-wider border-b border-white/150 pb-0.5 hover:text-white hover:border-white transition-all"
                                       whileHover={{ x: 5 }}
                                       whileTap={{ scale: 0.95 }}
                                     >
                                       Get Consultation
                                     </motion.button>
                                 </div>
-                                <div className="flex-1 bg-black/50 border border-white/10 rounded p-4 font-mono text-xs text-gray-400">
-                                    <div className="flex justify-between border-b border-white/5 pb-2 mb-2">
+                                <div className="flex-1 bg-black/70 border border-white/15 rounded p-4 font-mono text-xs text-gray-400">
+                                    <div className="flex justify-between border-b border-white/15 pb-2 mb-2">
                                         <span>AI Readiness Assessment</span>
                                         <span className="text-gray-300">COMPLETE</span>
                                     </div>
@@ -749,7 +897,7 @@ const App: React.FC = () => {
 
                         {/* Service 5 - ML Infrastructure */}
                         <div className="md:col-span-1 lg:col-span-1 lg:col-start-3 lg:row-start-2">
-                          <Suspense fallback={<div className="w-full h-48 bg-black/50 rounded flex items-center justify-center"><LoadingSpinner size="lg" /></div>}>
+                          <Suspense fallback={<div className="w-full h-48 bg-black/70 rounded flex items-center justify-center"><LoadingSpinner size="lg" /></div>}>
                             <MLInfrastructureCard onRequest={() => handleNavClick('contact')} />
                           </Suspense>
                         </div>
@@ -794,7 +942,7 @@ const App: React.FC = () => {
           {/* Downloads Section */}
           {activeSection === 'downloads' && (
             <motion.section 
-              className="py-24 px-6 relative z-10 border-t border-white/10 bg-gradient-to-b from-black via-zinc-900/20 to-black"
+              className="py-24 px-6 relative z-10 border-t border-white/20 bg-gradient-to-b from-black via-zinc-900/20 to-black"
               initial="hidden"
               animate="visible"
               variants={{
@@ -810,7 +958,7 @@ const App: React.FC = () => {
             >
                 <div className="max-w-7xl mx-auto">
                     <motion.div 
-                      className="mb-16 border-b border-white/10 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
+                      className="mb-16 border-b border-white/20 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
                       variants={{
                         hidden: { opacity: 0, y: 30 },
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -856,11 +1004,11 @@ const App: React.FC = () => {
                     >
                         <div className="text-center max-w-3xl mx-auto">
                             <motion.h3 
-                              className="text-2xl font-bold mb-4"
+                              className="text-2xl font-bold mb-4 text-sky-400"
                               whileHover={{ scale: 1.05 }}
-                            >Coming Soon</motion.h3>
+                            >Open Source Tools</motion.h3>
                             <p className="text-gray-400 text-lg">
-                                Our cutting-edge tools and applications are currently being prepared to accelerate your development workflow. Stay tuned for exciting releases!
+                                Download our production-ready tools built with security and performance in mind. Available for Windows and Linux with source code on GitHub.
                             </p>
                         </div>
                     </motion.div>
@@ -878,7 +1026,7 @@ const App: React.FC = () => {
                         }
                       }}
                     >
-                        {/* Umbra Programming Language */}
+                        {/* CLI-H4X */}
                         <motion.div 
                           className="glass-card download-card p-8 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10"
                           variants={{
@@ -911,56 +1059,62 @@ const App: React.FC = () => {
                                         scale: 1.1
                                       }}
                                     >
-                                        <span className="text-white font-bold text-xl">U</span>
+                                        <span className="text-white font-bold text-xl">C</span>
                                     </motion.div>
                                     <div>
-                                        <h3 className="text-xl font-bold">Umbra Programming Language</h3>
+                                        <h3 className="text-xl font-bold">CLI-H4X</h3>
                                         <p className="text-sm text-gray-400">v1.0.0</p>
                                     </div>
                                 </motion.div>
-                                <span className="text-xs px-3 py-1 bg-white/5 text-gray-300 rounded-full">Coming Soon</span>
+                                <span className="text-xs px-3 py-1 bg-sky-500/20 text-sky-400 rounded-full">Available</span>
                             </div>
                             
                             <p className="text-gray-400 mb-6">
-                                A modern, high-performance programming language designed for system-level development with memory safety and concurrency built-in.
+                                Signal Protocol secure messaging system with end-to-end encryption, double-ratchet algorithm, and TLS 1.3 for real-time encrypted chat.
                             </p>
                             
                             <div className="space-y-4">
                                 <div>
                                     <h4 className="text-sm font-bold text-gray-300 mb-2">Platforms</h4>
-                                    <div className="flex gap-2">
-                                        <span className="text-xs px-2 py-1 bg-white/10 rounded">Windows</span>
-                                        <span className="text-xs px-2 py-1 bg-white/10 rounded">Mac</span>
-                                        <span className="text-xs px-2 py-1 bg-white/10 rounded">Linux</span>
+                                    <div className="flex gap-2 flex-wrap">
+                                        <span className="text-xs px-2 py-1 bg-sky-500/20 text-sky-400 rounded">Windows</span>
+                                        <span className="text-xs px-2 py-1 bg-sky-500/20 text-sky-400 rounded">Linux</span>
+                                        <span className="text-xs px-2 py-1 bg-violet-500/20 text-violet-400 rounded">macOS (Build from source)</span>
                                     </div>
                                 </div>
                                 
                                 <div>
-                                    <h4 className="text-sm font-bold text-gray-300 mb-2">File Size</h4>
-                                    <p className="text-sm text-gray-400">TBD</p>
+                                    <h4 className="text-sm font-bold text-gray-300 mb-2">Public Server</h4>
+                                    <p className="text-sm text-gray-400 font-mono">cli-h4x.eclipse-softworks.com:443</p>
                                 </div>
                                 
                                 <div className="flex gap-3">
-                                    <motion.button 
-                                      className="flex-1 px-4 py-3 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium rounded flex items-center justify-center gap-2"
+                                    <motion.a 
+                                      href="https://github.com/Moon9t/CLI-H4X/releases/tag/v1.0.0"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex-1 px-4 py-3 bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 transition-colors text-sm font-medium rounded flex items-center justify-center gap-2"
                                       whileHover={{ scale: 1.05 }}
                                       whileTap={{ scale: 0.95 }}
                                     >
-                                        <i className="fa-solid fa-bell"></i>
-                                        Get Notified
-                                    </motion.button>
-                                    <motion.button 
-                                      className="px-4 py-3 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium rounded"
+                                        <Download size={16} />
+                                        Download
+                                    </motion.a>
+                                    <motion.a 
+                                      href="https://github.com/Moon9t/CLI-H4X"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="px-4 py-3 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium rounded flex items-center justify-center"
                                       whileHover={{ scale: 1.1, rotate: 10 }}
                                       whileTap={{ scale: 0.9 }}
                                     >
-                                        <i className="fa-solid fa-info"></i>
-                                    </motion.button>
+                                        <Github size={16} />
+                                    </motion.a>
                                 </div>
                             </div>
                         </motion.div>
 
-                        {/* Kasi Meals */}
+                        {/* SvcMgr */}
                         <motion.div 
                           className="glass-card download-card p-8 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10"
                           variants={{
@@ -993,51 +1147,57 @@ const App: React.FC = () => {
                                         scale: 1.1
                                       }}
                                     >
-                                        <span className="text-white font-bold text-xl">K</span>
+                                        <span className="text-white font-bold text-xl">S</span>
                                     </motion.div>
                                     <div>
-                                        <h3 className="text-xl font-bold">Kasi Meals</h3>
+                                        <h3 className="text-xl font-bold">SvcMgr</h3>
                                         <p className="text-sm text-gray-400">v1.0.0</p>
                                     </div>
                                 </motion.div>
-                                <span className="text-xs px-3 py-1 bg-white/5 text-gray-300 rounded-full">Coming Soon</span>
+                                <span className="text-xs px-3 py-1 bg-sky-500/20 text-sky-400 rounded-full">Available</span>
                             </div>
                             
                             <p className="text-gray-400 mb-6">
-                                A comprehensive meal planning and delivery application connecting local communities with authentic South African cuisine.
+                                Cross-platform CLI tool for secure management of server services including SSH, databases, and HTTP with encrypted credential handling.
                             </p>
                             
                             <div className="space-y-4">
                                 <div>
                                     <h4 className="text-sm font-bold text-gray-300 mb-2">Platforms</h4>
-                                    <div className="flex gap-2">
-                                        <span className="text-xs px-2 py-1 bg-white/10 rounded">Android</span>
-                                        <span className="text-xs px-2 py-1 bg-white/10 rounded">iOS</span>
-                                        <span className="text-xs px-2 py-1 bg-white/10 rounded">Web</span>
+                                    <div className="flex gap-2 flex-wrap">
+                                        <span className="text-xs px-2 py-1 bg-sky-500/20 text-sky-400 rounded">Windows</span>
+                                        <span className="text-xs px-2 py-1 bg-sky-500/20 text-sky-400 rounded">Linux</span>
+                                        <span className="text-xs px-2 py-1 bg-violet-500/20 text-violet-400 rounded">macOS (Build from source)</span>
                                     </div>
                                 </div>
                                 
                                 <div>
-                                    <h4 className="text-sm font-bold text-gray-300 mb-2">File Size</h4>
-                                    <p className="text-sm text-gray-400">TBD</p>
+                                    <h4 className="text-sm font-bold text-gray-300 mb-2">Features</h4>
+                                    <p className="text-sm text-gray-400">SSH, Database & HTTP service management</p>
                                 </div>
                                 
                                 <div className="flex gap-3">
-                                    <motion.button 
-                                      className="flex-1 px-4 py-3 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium rounded flex items-center justify-center gap-2"
+                                    <motion.a 
+                                      href="https://github.com/Eclipse-Softworks/svcmgr/releases"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex-1 px-4 py-3 bg-sky-500/20 hover:bg-sky-500/30 text-sky-400 transition-colors text-sm font-medium rounded flex items-center justify-center gap-2"
                                       whileHover={{ scale: 1.05 }}
                                       whileTap={{ scale: 0.95 }}
                                     >
-                                        <i className="fa-solid fa-bell"></i>
-                                        Get Notified
-                                    </motion.button>
-                                    <motion.button 
-                                      className="px-4 py-3 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium rounded"
+                                        <Download size={16} />
+                                        Download
+                                    </motion.a>
+                                    <motion.a 
+                                      href="https://github.com/Eclipse-Softworks/svcmgr"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="px-4 py-3 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium rounded flex items-center justify-center"
                                       whileHover={{ scale: 1.1, rotate: -10 }}
                                       whileTap={{ scale: 0.9 }}
                                     >
-                                        <i className="fa-solid fa-info"></i>
-                                    </motion.button>
+                                        <Github size={16} />
+                                    </motion.a>
                                 </div>
                             </div>
                         </motion.div>
@@ -1080,7 +1240,7 @@ const App: React.FC = () => {
           {/* Solutions Section */}
           {activeSection === 'solutions' && (
             <motion.section 
-              className="py-24 px-6 relative z-10 border-t border-white/10"
+              className="py-24 px-6 relative z-10 border-t border-white/20"
               initial="hidden"
               animate="visible"
               variants={{
@@ -1096,7 +1256,7 @@ const App: React.FC = () => {
             >
                 <div className="max-w-7xl mx-auto">
                     <motion.div 
-                      className="mb-16 border-b border-white/10 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
+                      className="mb-16 border-b border-white/20 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
                       variants={{
                         hidden: { opacity: 0, y: 30 },
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -1157,10 +1317,12 @@ const App: React.FC = () => {
                                           }}
                                           whileHover={{ x: 5 }}
                                         >
-                                            <motion.i 
-                                              className="fa-solid fa-check text-gray-300 mt-1"
+                                            <motion.div
+                                              className="mt-1"
                                               whileHover={{ scale: 1.2 }}
-                                            ></motion.i>
+                                            >
+                                              <CheckCircle size={16} className="text-gray-300" />
+                                            </motion.div>
                                             <span className="text-gray-300">{text}</span>
                                         </motion.li>
                                     ))}
@@ -1183,10 +1345,10 @@ const App: React.FC = () => {
                               }}
                             >
                                 {[
-                                    { icon: "fa-chart-line", title: "Data Analytics", desc: "Unlock insights from your data with our advanced analytics platform." },
-                                    { icon: "fa-robot", title: "AI Integration", desc: "Implement cutting-edge AI solutions tailored to your business needs." },
-                                    { icon: "fa-mobile-alt", title: "Mobile Development", desc: "Native and cross-platform mobile applications that deliver exceptional user experiences." },
-                                    { icon: "fa-shield-alt", title: "Cybersecurity", desc: "Protect your digital assets with our comprehensive security solutions." }
+                                    { icon: "chart-line", title: "Data Analytics", desc: "Unlock insights from your data with our advanced analytics platform." },
+                                    { icon: "robot", title: "AI Integration", desc: "Implement cutting-edge AI solutions tailored to your business needs." },
+                                    { icon: "mobile-alt", title: "Mobile Development", desc: "Native and cross-platform mobile applications that deliver exceptional user experiences." },
+                                    { icon: "shield-alt", title: "Cybersecurity", desc: "Protect your digital assets with our comprehensive security solutions." }
                                 ].map((item, i) => (
                                     <motion.div 
                                       key={i} 
@@ -1209,18 +1371,20 @@ const App: React.FC = () => {
                                         transition: { duration: 0.3 }
                                       }}
                                     >
-                                        <motion.i 
-                                          className={`fa-solid ${item.icon} text-3xl mb-3 text-gray-300`}
+                                        <motion.div 
+                                          className="flex justify-center mb-3"
                                           whileHover={{ 
                                             scale: 1.2,
                                             rotate: 10,
                                             transition: { duration: 0.3 }
                                           }}
-                                        ></motion.i>
+                                        >
+                                          <DynamicIcon name={item.icon} size={32} className="text-gray-300" />
+                                        </motion.div>
                                         <h4 className="font-bold mb-2">{item.title}</h4>
                                         <p className="text-xs text-gray-400 mb-3">{item.desc}</p>
                                         <motion.button 
-                                          className="text-xs font-bold uppercase tracking-wider border-b border-white/50 pb-0.5 hover:text-white hover:border-white transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2"
+                                          className="text-xs font-bold uppercase tracking-wider border-b border-white/150 pb-0.5 hover:text-white hover:border-white transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2"
                                           whileHover={{ x: 3 }}
                                           whileTap={{ scale: 0.95 }}
                                         >
@@ -1266,18 +1430,20 @@ const App: React.FC = () => {
                             transition: { duration: 0.3 }
                           }}
                         >
-                            <motion.i 
-                              className="fa-solid fa-wifi text-2xl mb-4 text-gray-300 group-hover:text-white transition-colors"
+                            <motion.div 
+                              className="flex justify-center mb-4"
                               whileHover={{ 
                                 scale: 1.1,
                                 rotate: 5,
                                 transition: { duration: 0.2 }
                               }}
-                            ></motion.i>
+                            >
+                              <Wifi size={28} className="text-gray-300 group-hover:text-white transition-colors" />
+                            </motion.div>
                             <h3 className="text-lg font-bold mb-3">IoT Development</h3>
                             <p className="text-sm text-gray-400 mb-4">Build connected devices and smart systems for the modern world.</p>
                             <motion.button 
-                              className="text-xs font-bold uppercase tracking-wider border-b border-white/50 pb-0.5 hover:text-white hover:border-white transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2"
+                              className="text-xs font-bold uppercase tracking-wider border-b border-white/150 pb-0.5 hover:text-white hover:border-white transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2"
                               whileHover={{ x: 3 }}
                               whileTap={{ scale: 0.95 }}
                             >
@@ -1304,18 +1470,20 @@ const App: React.FC = () => {
                             transition: { duration: 0.3 }
                           }}
                         >
-                            <motion.i 
-                              className="fa-solid fa-link text-2xl mb-4 text-gray-300 group-hover:text-white transition-colors"
+                            <motion.div 
+                              className="flex justify-center mb-4"
                               whileHover={{ 
                                 scale: 1.1,
                                 rotate: -5,
                                 transition: { duration: 0.2 }
                               }}
-                            ></motion.i>
+                            >
+                              <Link size={28} className="text-gray-300 group-hover:text-white transition-colors" />
+                            </motion.div>
                             <h3 className="text-lg font-bold mb-3">Blockchain</h3>
                             <p className="text-sm text-gray-400 mb-4">Leverage decentralized technology for transparent and secure transactions.</p>
                             <motion.button 
-                              className="text-xs font-bold uppercase tracking-wider border-b border-white/50 pb-0.5 hover:text-white hover:border-white transition-all focus-ring"
+                              className="text-xs font-bold uppercase tracking-wider border-b border-white/150 pb-0.5 hover:text-white hover:border-white transition-all focus-ring"
                               whileHover={{ x: 3 }}
                               whileTap={{ scale: 0.95 }}
                             >
@@ -1356,7 +1524,7 @@ const App: React.FC = () => {
 
           {/* Empower Your Business Section - Shown on Home or Solutions */}
           {activeSection === 'solutions' && (
-            <section className="py-24 px-6 relative z-10 border-t border-white/10 bg-gradient-to-b from-black via-zinc-900/20 to-black animate-slide-down">
+            <section className="py-24 px-6 relative z-10 border-t border-white/20 bg-gradient-to-b from-black via-zinc-900/20 to-black animate-slide-down">
                 <div className="max-w-7xl mx-auto">
                     <div className="glass-card p-8 transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -1366,13 +1534,13 @@ const App: React.FC = () => {
                                 
                                 <div className="space-y-6">
                                     {[
-                                        { icon: "fa-chart-bar", title: "Advanced Analytics Solutions", desc: "Transform your data into actionable insights with our cutting-edge analytics platform." },
-                                        { icon: "fa-brain", title: "AI-Powered Innovation", desc: "Leverage artificial intelligence to automate processes, enhance productivity, and unlock new opportunities." },
-                                        { icon: "fa-code", title: "Custom Application Development", desc: "Build scalable, robust applications tailored to your specific business requirements." },
-                                        { icon: "fa-user-check", title: "Exceptional User Experiences", desc: "Create memorable digital experiences that engage your customers and drive business success." }
+                                        { icon: "chart-bar", title: "Advanced Analytics Solutions", desc: "Transform your data into actionable insights with our cutting-edge analytics platform." },
+                                        { icon: "brain", title: "AI-Powered Innovation", desc: "Leverage artificial intelligence to automate processes, enhance productivity, and unlock new opportunities." },
+                                        { icon: "code", title: "Custom Application Development", desc: "Build scalable, robust applications tailored to your specific business requirements." },
+                                        { icon: "user-check", title: "Exceptional User Experiences", desc: "Create memorable digital experiences that engage your customers and drive business success." }
                                     ].map((item, i) => (
                                         <div key={i} className="flex items-start gap-4">
-                                            <i className={`fa-solid ${item.icon} text-xl text-gray-300 mt-1`}></i>
+                                            <DynamicIcon name={item.icon} size={20} className="text-gray-300 mt-1 flex-shrink-0" />
                                             <div>
                                                 <h3 className="font-bold mb-2">{item.title}</h3>
                                                 <p className="text-gray-400 text-sm">{item.desc}</p>
@@ -1401,7 +1569,7 @@ const App: React.FC = () => {
           {/* Projects Section */}
           {activeSection === 'projects' && (
             <motion.section 
-              className="py-24 px-6 relative z-10 border-t border-white/10"
+              className="py-24 px-6 relative z-10 border-t border-white/20"
               initial="hidden"
               animate="visible"
               variants={{
@@ -1417,7 +1585,7 @@ const App: React.FC = () => {
             >
                 <div className="max-w-7xl mx-auto">
                     <motion.div 
-                      className="mb-16 border-b border-white/10 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
+                      className="mb-16 border-b border-white/20 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
                       variants={{
                         hidden: { opacity: 0, y: 30 },
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -1451,7 +1619,7 @@ const App: React.FC = () => {
                     </motion.div>
 
                     <motion.div 
-                      className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                       variants={{
                         hidden: { opacity: 0 },
                         visible: {
@@ -1463,15 +1631,11 @@ const App: React.FC = () => {
                         }
                       }}
                     >
-                        {[
-                            { icon: "fa-industry", title: "Predictive Maintenance", desc: "AI system for manufacturing equipment failure prediction.", tags: ["ML", "IoT", "Python"] },
-                            { icon: "fa-comments", title: "Customer Service AI", desc: "Natural language processing for automated customer support.", tags: ["NLP", "Chatbots", "TensorFlow"] },
-                            { icon: "fa-chart-pie", title: "Financial Analytics", desc: "Risk assessment and market prediction models for finance sector.", tags: ["Analytics", "Forecasting", "PyTorch"] }
-                        ].map((proj, i) => (
+                        {GITHUB_PROJECTS.map((proj, i) => (
                             <motion.div 
                               key={i}
                               id={proj.title.toLowerCase().replace(/\s+/g, '-')}
-                              className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10"
+                              className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10 flex flex-col h-full"
                               variants={{
                                 hidden: { opacity: 0, y: 60, scale: 0.8 },
                                 visible: { 
@@ -1486,32 +1650,44 @@ const App: React.FC = () => {
                               }}
                               whileHover={{ 
                                 y: -12,
-                                scale: 1.03,
+                                scale: 1.02,
                                 transition: { duration: 0.3 }
                               }}
                             >
                                 <motion.div 
-                                  className="h-48 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/10"
+                                  className="h-40 bg-gradient-to-br from-gray-900 to-black rounded-lg mb-4 flex items-center justify-center border border-white/20 relative"
                                   whileHover={{ 
-                                    scale: 1.05,
+                                    scale: 1.02,
                                     transition: { duration: 0.3 }
                                   }}
                                 >
-                                    <motion.i 
-                                      className={`fa-solid ${proj.icon} text-4xl text-gray-700`}
+                                    <motion.div
                                       whileHover={{ 
                                         scale: 1.2,
                                         rotate: 10,
                                         transition: { duration: 0.3 }
                                       }}
-                                    ></motion.i>
+                                    >
+                                      <DynamicIcon name={proj.icon} size={40} className="text-gray-600" />
+                                    </motion.div>
+                                    {proj.stars > 0 && (
+                                      <span className="absolute top-3 right-3 flex items-center gap-1 text-xs text-yellow-400">
+                                        <Star size={12} fill="currentColor" />
+                                        {proj.stars}
+                                      </span>
+                                    )}
+                                    {proj.language && (
+                                      <span className="absolute bottom-3 left-3 text-xs px-2 py-1 bg-white/10 rounded text-gray-400">
+                                        {proj.language}
+                                      </span>
+                                    )}
                                 </motion.div>
                                 <motion.h3 
                                   className="text-lg font-bold mb-2"
                                   whileHover={{ x: 5 }}
                                 >{proj.title}</motion.h3>
-                                <p className="text-sm text-gray-400 mb-4">{proj.desc}</p>
-                                <div className="flex gap-2">
+                                <p className="text-sm text-gray-400 mb-4 flex-grow">{proj.description}</p>
+                                <div className="flex flex-wrap gap-2 mb-4">
                                     {proj.tags.map(tag => (
                                         <motion.span 
                                           key={tag} 
@@ -1523,6 +1699,15 @@ const App: React.FC = () => {
                                         >{tag}</motion.span>
                                     ))}
                                 </div>
+                                <a 
+                                  href={proj.github}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors mt-auto"
+                                >
+                                  <Github size={16} />
+                                  View on GitHub
+                                </a>
                             </motion.div>
                         ))}
                     </motion.div>
@@ -1532,15 +1717,15 @@ const App: React.FC = () => {
 
           {/* About Section */}
           {activeSection === 'about' && (
-            <section className="py-24 px-6 relative z-10 border-t border-white/10 animate-slide-down">
+            <section className="py-24 px-6 relative z-10 border-t border-white/20 animate-slide-down">
                 <div className="max-w-7xl mx-auto">
-                    <div className="mb-16 border-b border-white/10 pb-8">
+                    <div className="mb-16 border-b border-white/20 pb-8">
                         <div className="max-w-4xl mx-auto text-center">
-                            <div className="w-16 h-16 bg-white rounded-full mx-auto mb-8 flex items-center justify-center shadow-[0_0_40px_rgba(255,255,255,0.2)]">
-                                <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
-                                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                                </div>
-                            </div>
+                            <img 
+                              src="/img/logo.svg" 
+                              alt="Eclipse Softworks Logo" 
+                              className="w-20 h-20 mx-auto mb-8 object-contain"
+                            />
                             
                             <h2 className="text-4xl font-bold text-white mb-6">About Eclipse Softworks</h2>
                             <p className="text-xl text-gray-400 leading-relaxed mb-10">
@@ -1551,12 +1736,14 @@ const App: React.FC = () => {
 
                     <div className="about-grid mb-20">
                       {[
-                        { icon: "fa-bullseye", title: "Our Mission", desc: "To empower businesses across Africa with reliable, scalable, and innovative digital solutions that drive measurable impact." },
-                        { icon: "fa-eye", title: "Our Vision", desc: "To become the leading software powerhouse born in Africa — a hub for engineering excellence, creativity, and global innovation." },
-                        { icon: "fa-heart", title: "Our Values", desc: "Integrity, quality, collaboration, and a relentless drive for excellence form the foundation of everything we build." }
+                        { icon: "bullseye", title: "Our Mission", desc: "To empower businesses across Africa with reliable, scalable, and innovative digital solutions that drive measurable impact." },
+                        { icon: "eye", title: "Our Vision", desc: "To become the leading software powerhouse born in Africa — a hub for engineering excellence, creativity, and global innovation." },
+                        { icon: "heart", title: "Our Values", desc: "Integrity, quality, collaboration, and a relentless drive for excellence form the foundation of everything we build." }
                       ].map((item, i) => (
                         <div key={i} className="glass-card p-8 text-center about-mission transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
-                          <div className="text-3xl mb-4 text-gray-300"><i className={`fa-solid ${item.icon}`}></i></div>
+                          <div className="flex justify-center mb-4">
+                            <DynamicIcon name={item.icon} size={32} className="text-gray-300" />
+                          </div>
                           <h3 className="text-xl font-bold mb-4">{item.title}</h3>
                           <p className="text-gray-400">{item.desc}</p>
                         </div>
@@ -1602,7 +1789,7 @@ const App: React.FC = () => {
                           },{
                             year: '2024', title: 'Expansion', desc: 'Expanded team and partnered with major financial institutions.'
                           }].map((milestone, i) => (
-                                    <div key={i} role="listitem" className="min-w-[220px] p-4 bg-white/5 rounded-md">
+                                    <div key={i} role="listitem" className="min-w-[220px] p-4 bg-white/15 rounded-md">
                               <div className="text-xs text-gray-500 mb-2">{milestone.year}</div>
                               <div className="font-bold text-white mb-1">{milestone.title}</div>
                               <div className="text-xs text-gray-400">{milestone.desc}</div>
@@ -1612,32 +1799,67 @@ const App: React.FC = () => {
                       </div>
                         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                             <div>
-                                <span className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-2 block">Featured Projects</span>
-                                <h3 className="text-2xl font-bold text-white">Showcasing some of our most impactful projects</h3>
+                                <span className="text-xs font-mono text-gray-500 uppercase tracking-widest mb-2 block">Open Source</span>
+                                <h3 className="text-2xl font-bold text-white">Our GitHub Projects</h3>
                             </div>
                             <p className="text-gray-500 text-sm max-w-sm">
-                                Projects that demonstrate our expertise and commitment to innovation.
+                                Open-source tools and frameworks built by Eclipse Softworks.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {[
-                                { icon: "fa-brain", title: "AI-Powered Analytics Platform", desc: "Advanced machine learning platform for business intelligence and predictive analytics.", tags: ["Python", "TensorFlow", "React"], status: "Live", statusColor: "green" },
-                                { icon: "fa-mobile-alt", title: "Mobile Banking Solution", desc: "Secure and intuitive mobile banking application for African financial institutions.", tags: ["React Native", "Node.js", "MongoDB"], status: "In Development", statusColor: "blue" },
-                                { icon: "fa-shopping-cart", title: "E-Commerce Platform", desc: "Scalable e-commerce solution tailored for African markets and payment systems.", tags: ["Next.js", "Stripe", "PostgreSQL"], status: "Live", statusColor: "green" }
+                                { 
+                                  icon: "layers", 
+                                  title: "DomainHive Framework", 
+                                  desc: "Open-source framework for IoT, mobile development, and microservices.", 
+                                  tags: ["TypeScript", "Framework"], 
+                                  github: "https://github.com/Eclipse-Softworks/domainhive-framework",
+                                  stars: 1 
+                                },
+                                { 
+                                  icon: "bug", 
+                                  title: "Eclipse Issue Tracker", 
+                                  desc: "Secure Spring Boot REST API for managing software issues with JWT auth.", 
+                                  tags: ["Java", "Spring Boot"], 
+                                  github: "https://github.com/Eclipse-Softworks/eclipse-issue-tracker",
+                                  stars: 0 
+                                },
+                                { 
+                                  icon: "terminal", 
+                                  title: "SvcMgr", 
+                                  desc: "Cross-platform CLI for secure management of server services.", 
+                                  tags: ["Go", "CLI"], 
+                                  github: "https://github.com/Eclipse-Softworks/svcmgr",
+                                  stars: 1 
+                                }
                             ].map((proj, i) => (
                                 <div key={i} className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
-                                    <div className="h-48 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/10 relative">
-                                        <i className={`fa-solid ${proj.icon} text-4xl text-gray-700`}></i>
-                                        <span className={`absolute top-3 right-3 text-xs px-2 py-1 ${getStatusClasses(proj.statusColor)} rounded-full`}>{proj.status}</span>
+                                    <div className="h-48 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/20 relative">
+                                        <DynamicIcon name={proj.icon} size={48} className="text-gray-700" />
+                                        {proj.stars > 0 && (
+                                          <span className="absolute top-3 right-3 flex items-center gap-1 text-xs text-yellow-400">
+                                            <Star size={12} fill="currentColor" />
+                                            {proj.stars}
+                                          </span>
+                                        )}
                                     </div>
                                     <h3 className="text-lg font-bold mb-2">{proj.title}</h3>
                                     <p className="text-sm text-gray-400 mb-4">{proj.desc}</p>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-wrap gap-2 mb-4">
                                         {proj.tags.map(tag => (
                                             <span key={tag} className="text-xs px-2 py-1 bg-white/10 rounded">{tag}</span>
                                         ))}
                                     </div>
+                                    <a 
+                                      href={proj.github}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-2 text-xs text-gray-400 hover:text-white transition-colors"
+                                    >
+                                      <Github size={14} />
+                                      View on GitHub
+                                    </a>
                                 </div>
                             ))}
                         </div>
@@ -1670,17 +1892,17 @@ const App: React.FC = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {[
-                                { icon: "fa-cube", title: "Eclipse SDK", desc: "Complete software development kit for building applications with Eclipse Softworks tools.", meta: ["Size: 45 MB", "Version: v2.1.0"] },
-                                { icon: "fa-book", title: "API Documentation", desc: "Comprehensive documentation and examples for our REST API endpoints.", meta: ["Size: PDF", "Version: v1.8"] },
-                                { icon: "fa-mobile", title: "Mobile Templates", desc: "Ready-to-use mobile app templates and UI components for rapid development.", meta: ["Size: 120 MB", "Version: v1.5.2"] }
+                                { icon: "cube", title: "Eclipse SDK", desc: "Complete software development kit for building applications with Eclipse Softworks tools.", meta: ["Size: 45 MB", "Version: v2.1.0"] },
+                                { icon: "book", title: "API Documentation", desc: "Comprehensive documentation and examples for our REST API endpoints.", meta: ["Size: PDF", "Version: v1.8"] },
+                                { icon: "mobile-alt", title: "Mobile Templates", desc: "Ready-to-use mobile app templates and UI components for rapid development.", meta: ["Size: 120 MB", "Version: v1.5.2"] }
                             ].map((res, i) => (
                                 <div key={i} className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
-                                    <div className="h-32 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/10">
-                                        <i className={`fa-solid ${res.icon} text-3xl text-gray-600`}></i>
+                                    <div className="h-32 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/20">
+                                        <DynamicIcon name={res.icon} size={32} className="text-gray-600" />
                                     </div>
                                     <div className="flex justify-between items-start mb-3">
                                         <h3 className="text-lg font-bold">{res.title}</h3>
-                                        <span className="text-xs px-2 py-1 bg-white/5 text-gray-300 rounded-full">Coming Soon</span>
+                                        <span className="text-xs px-2 py-1 bg-white/15 text-gray-300 rounded-full">Coming Soon</span>
                                     </div>
                                     <p className="text-sm text-gray-400 mb-4">{res.desc}</p>
                                     <div className="flex justify-between text-xs text-gray-500 mb-4">
@@ -1708,8 +1930,8 @@ const App: React.FC = () => {
                                         { title: "Social Impact", desc: "We support initiatives that uplift underserved communities through digital tools and training." }
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-start gap-3">
-                                            <div className="w-5 h-5 flex items-center justify-center rounded-full bg-white/5 mt-1">
-                                                <i className="fa-solid fa-check text-xs text-gray-300"></i>
+                                            <div className="w-5 h-5 flex items-center justify-center rounded-full bg-white/15 mt-1">
+                                                <CheckCircle size={12} className="text-gray-300" />
                                             </div>
                                             <div>
                                                 <h4 className="font-bold mb-1">{item.title}</h4>
@@ -1735,7 +1957,7 @@ const App: React.FC = () => {
           {/* Team Section */}
           {activeSection === 'team' && (
             <motion.section
-              className="py-24 px-6 relative z-10 border-t border-white/10 bg-gradient-to-b from-black via-zinc-900/20 to-black"
+              className="py-24 px-6 relative z-10 border-t border-white/20 bg-gradient-to-b from-black via-zinc-900/20 to-black"
               initial="hidden"
               animate="visible"
               variants={{
@@ -1751,7 +1973,7 @@ const App: React.FC = () => {
             >
                 <div className="max-w-7xl mx-auto">
                     <motion.div
-                      className="mb-16 border-b border-white/10 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
+                      className="mb-16 border-b border-white/20 pb-8 flex flex-col md:flex-row md:items-end justify-between gap-4"
                       variants={{
                         hidden: { opacity: 0, y: 30 },
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -1879,7 +2101,7 @@ const App: React.FC = () => {
                                       whileHover={{ x: 5 }}
                                       whileTap={{ scale: 0.95 }}
                                     >
-                                        <i className="fa-brands fa-linkedin"></i>
+                                        <Linkedin size={16} />
                                         <span className="text-xs">LinkedIn</span>
                                     </motion.a>
                                 </motion.div>
@@ -2097,7 +2319,7 @@ const App: React.FC = () => {
                                       whileHover={{ x: 5 }}
                                       whileTap={{ scale: 0.95 }}
                                     >
-                                        <i className="fa-brands fa-linkedin"></i>
+                                        <Linkedin size={16} />
                                         <span className="text-xs">LinkedIn</span>
                                     </motion.a>
                                 </motion.div>
@@ -2126,23 +2348,24 @@ const App: React.FC = () => {
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                             {[
-                                { icon: "fa-users", title: "Collaboration", desc: "We work together across disciplines to achieve extraordinary results." },
-                                { icon: "fa-lightbulb", title: "Innovation", desc: "We embrace new ideas and technologies to solve complex challenges." },
-                                { icon: "fa-heart", title: "Impact", desc: "We build solutions that create real value for our clients and communities." }
+                                { icon: "users", title: "Collaboration", desc: "We work together across disciplines to achieve extraordinary results." },
+                                { icon: "lightbulb", title: "Innovation", desc: "We embrace new ideas and technologies to solve complex challenges." },
+                                { icon: "heart", title: "Impact", desc: "We build solutions that create real value for our clients and communities." }
                             ].map((value, i) => (
                                 <motion.div
                                   key={i}
                                   className="text-center"
                                   whileHover={{ y: -5 }}
                                 >
-                                    <motion.i
-                                      className={`fa-solid ${value.icon} text-3xl mb-3 text-gray-300`}
+                                    <motion.div
+                                      className="flex justify-center mb-3"
                                       whileHover={{
                                         scale: 1.2,
-                                        color: "#ffffff",
                                         transition: { duration: 0.3 }
                                       }}
-                                    ></motion.i>
+                                    >
+                                      <DynamicIcon name={value.icon} size={32} className="text-gray-300" />
+                                    </motion.div>
                                     <h4 className="font-bold mb-2">{value.title}</h4>
                                     <p className="text-sm text-gray-400">{value.desc}</p>
                                 </motion.div>
@@ -2156,7 +2379,7 @@ const App: React.FC = () => {
           {/* Contact Section */}
           {activeSection === 'contact' && (
             <motion.section 
-              className="py-24 px-6 relative z-10 border-t border-white/10"
+              className="py-24 px-6 relative z-10 border-t border-white/20"
               initial="hidden"
               animate="visible"
               variants={{
@@ -2235,9 +2458,16 @@ const App: React.FC = () => {
                             transition: { duration: 0.3 }
                           }}
                         >
-                            <form className="space-y-6" onSubmit={async (e) => {
+                            <form className="space-y-6 relative" onSubmit={async (e) => {
                                                 e.preventDefault();
+                                                // Bot detection - if honeypot is filled, silently reject
+                                                if (contactHoneypot) {
+                                                    setToast({ type: 'success', message: 'Message sent! We will respond shortly.' });
+                                                    return;
+                                                }
                                                 setIsSubmitting(true);
+                                                // Track form submission attempt
+                                                trackEvent?.('contact', 'submit', 'contact_form');
                                                 try {
                                                     const res = await postContact({ name: contactName, email: contactEmail, message: contactMessage });
                                                     if (res.ok) {
@@ -2245,11 +2475,15 @@ const App: React.FC = () => {
                                                         setContactName('');
                                                         setContactEmail('');
                                                         setContactMessage('');
+                                                        // Track successful submission
+                                                        trackEvent?.('contact', 'success', 'contact_form');
                                                     } else {
                                                         setToast({ type: 'error', message: 'Failed to send message. Please try again later.' });
+                                                        trackEvent?.('contact', 'error', 'contact_form');
                                                     }
                                                 } catch (err) {
                                                     setToast({ type: 'error', message: 'An unexpected error occurred.' });
+                                                    trackEvent?.('contact', 'error', 'contact_form');
                                                 } finally {
                                                     setIsSubmitting(false);
                                                     setTimeout(() => setToast(null), 4500);
@@ -2269,7 +2503,7 @@ const App: React.FC = () => {
                                       required 
                                       aria-invalid={!contactName.trim()} 
                                       aria-label="Name" 
-                                      className="input w-full bg-black/50 border border-white/10 rounded px-4 py-3 text-white focus:ring focus:border-white/30 transition-colors" 
+                                      className="input w-full bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="Your Name"
                                       whileFocus={{ scale: 1.02 }}
                                     />
@@ -2288,7 +2522,7 @@ const App: React.FC = () => {
                                       required 
                                       aria-invalid={!contactEmail.includes('@')} 
                                       aria-label="Email" 
-                                      className="input w-full bg-black/50 border border-white/10 rounded px-4 py-3 text-white focus:ring focus:border-white/30 transition-colors" 
+                                      className="input w-full bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="you@example.com"
                                       whileFocus={{ scale: 1.02 }}
                                     />
@@ -2306,11 +2540,24 @@ const App: React.FC = () => {
                                       required 
                                       aria-invalid={!contactMessage.trim()} 
                                       aria-label="Message" 
-                                      className="w-full h-32 input bg-black/50 border border-white/10 rounded px-4 py-3 text-white focus:ring focus:border-white/30 transition-colors" 
+                                      className="w-full h-32 input bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="Your message..."
                                       whileFocus={{ scale: 1.02 }}
                                     ></motion.textarea>
                                 </motion.div>
+                                {/* Honeypot field for bot detection - hidden from users */}
+                                <div className="absolute opacity-0 pointer-events-none" aria-hidden="true">
+                                    <label htmlFor="website">Website</label>
+                                    <input 
+                                      type="text" 
+                                      id="website"
+                                      name="website"
+                                      tabIndex={-1}
+                                      autoComplete="off"
+                                      value={contactHoneypot}
+                                      onChange={(e) => setContactHoneypot(e.target.value)}
+                                    />
+                                </div>
                                 <motion.button 
                                   type="submit" 
                                   disabled={isSubmitting || !isFormValid} 
@@ -2361,30 +2608,33 @@ const App: React.FC = () => {
                                       className="flex items-center gap-3"
                                       whileHover={{ x: 5 }}
                                     >
-                                        <motion.i 
-                                          className="fa-solid fa-envelope text-gray-400"
-                                          whileHover={{ scale: 1.2, color: "#ffffff" }}
-                                        ></motion.i>
+                                        <motion.div
+                                          whileHover={{ scale: 1.2 }}
+                                        >
+                                          <Mail size={18} className="text-gray-400" />
+                                        </motion.div>
                                         <span className="text-gray-300">info@eclipse-softworks.com</span>
                                     </motion.div>
                                     <motion.div 
                                       className="flex items-center gap-3"
                                       whileHover={{ x: 5 }}
                                     >
-                                        <motion.i 
-                                          className="fa-solid fa-phone text-gray-400"
-                                          whileHover={{ scale: 1.2, color: "#ffffff" }}
-                                        ></motion.i>
+                                        <motion.div
+                                          whileHover={{ scale: 1.2 }}
+                                        >
+                                          <Phone size={18} className="text-gray-400" />
+                                        </motion.div>
                                         <span className="text-gray-300">+27 (0) 82 079 1642</span>
                                     </motion.div>
                                     <motion.div 
                                       className="flex items-center gap-3"
                                       whileHover={{ x: 5 }}
                                     >
-                                        <motion.i 
-                                          className="fa-solid fa-location-dot text-gray-400"
-                                          whileHover={{ scale: 1.2, color: "#ffffff" }}
-                                        ></motion.i>
+                                        <motion.div
+                                          whileHover={{ scale: 1.2 }}
+                                        >
+                                          <MapPin size={18} className="text-gray-400" />
+                                        </motion.div>
                                         <span className="text-gray-300">Sandton, Johannesburg, South Africa</span>
                                     </motion.div>
                                 </div>
@@ -2444,6 +2694,19 @@ const App: React.FC = () => {
           )}
 
             <Footer onNav={handleNavClick} />
+            
+            {/* Demo Booking Modal */}
+            <Suspense fallback={null}>
+              <DemoBookingModal 
+                isOpen={isDemoModalOpen} 
+                onClose={() => setIsDemoModalOpen(false)} 
+              />
+            </Suspense>
+            
+            {/* Cookie Consent Banner */}
+            <Suspense fallback={null}>
+              <CookieConsent />
+            </Suspense>
       </main>
     </div>
   );

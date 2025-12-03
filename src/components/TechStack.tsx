@@ -1,15 +1,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Layers, Code2, Server as ServerIcon, Brain, Database, Hexagon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-interface TechItem { name: string; icon: string; color?: string }
+interface TechItem { 
+  name: string; 
+  icon: LucideIcon; 
+  color?: string;
+}
 
 const DEFAULT_STACK: TechItem[] = [
-  { name: 'React', icon: 'fa-brands fa-react', color: 'bg-blue-600' },
-  { name: 'TypeScript', icon: 'fa-brands fa-js', color: 'bg-sky-500' },
-  { name: 'Node.js', icon: 'fa-brands fa-node', color: 'bg-green-600' },
-  { name: 'Python', icon: 'fa-brands fa-python', color: 'bg-yellow-700' },
-  { name: 'TensorFlow', icon: 'fa-solid fa-brain', color: 'bg-indigo-700' },
-  { name: 'PostgreSQL', icon: 'fa-solid fa-database', color: 'bg-blue-900' }
+  { name: 'React', icon: Layers, color: 'text-blue-400' },
+  { name: 'TypeScript', icon: Code2, color: 'text-sky-400' },
+  { name: 'Node.js', icon: Hexagon, color: 'text-green-400' },
+  { name: 'Python', icon: Code2, color: 'text-yellow-400' },
+  { name: 'TensorFlow', icon: Brain, color: 'text-orange-400' },
+  { name: 'PostgreSQL', icon: Database, color: 'text-blue-300' }
 ];
 
 const TechStack: React.FC<{ items?: TechItem[] }> = ({ items = DEFAULT_STACK }) => {
@@ -18,12 +24,19 @@ const TechStack: React.FC<{ items?: TechItem[] }> = ({ items = DEFAULT_STACK }) 
       <h3 className="text-xl font-bold text-white mb-4">Technology Stack</h3>
       <p className="text-sm text-gray-400 mb-6">Our engineers use modern, battle-tested technologies to build resilient and scalable products.</p>
       <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-        {items.map((t, i) => (
-          <motion.div key={i} className="flex items-center justify-center p-3 rounded bg-white/5 text-white text-sm transform transition-transform duration-200 hover:-translate-y-1 hover:scale-105 cursor-default" whileHover={{ y: -4, scale: 1.03 }}>
-            <i className={`${t.icon} text-xl mr-2`}></i>
-            <span className="text-xs">{t.name}</span>
-          </motion.div>
-        ))}
+        {items.map((t, i) => {
+          const IconComponent = t.icon;
+          return (
+            <motion.div 
+              key={i} 
+              className="flex items-center justify-center p-3 rounded bg-white/15 text-white text-sm transform transition-transform duration-200 hover:-translate-y-1 hover:scale-105 cursor-default" 
+              whileHover={{ y: -4, scale: 1.03 }}
+            >
+              <IconComponent size={20} className={`mr-2 ${t.color || 'text-gray-300'}`} />
+              <span className="text-xs">{t.name}</span>
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

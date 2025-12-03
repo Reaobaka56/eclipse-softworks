@@ -1,3 +1,29 @@
+# Eclipse Softworks Robots.txt
+# https://www.eclipse-softworks.com
+
+# Allow all search engine crawlers
 User-agent: *
 Allow: /
+
+# Crawl-delay for politeness (optional, most major crawlers ignore this)
+Crawl-delay: 1
+
+# Disallow admin/api routes (if any exist in future)
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Allow important assets
+Allow: /img/
+Allow: /*.js$
+Allow: /*.css$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.svg$
+Allow: /*.webp$
+
+# Sitemap location
 Sitemap: https://www.eclipse-softworks.com/sitemap.xml
+
+# Host directive (canonical domain)
+Host: https://www.eclipse-softworks.com

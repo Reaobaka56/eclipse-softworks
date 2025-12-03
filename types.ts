@@ -30,6 +30,16 @@ export interface Project {
   statusColor?: string;
 }
 
+export interface GitHubProject {
+  icon: string;
+  title: string;
+  description: string;
+  tags: string[];
+  github: string;
+  stars: number;
+  language?: string;
+}
+
 export interface DownloadItem {
   name: string;
   version: string;
@@ -37,6 +47,8 @@ export interface DownloadItem {
   platforms?: string[];
   iconLetter: string;
   gradient: string;
+  downloadUrl?: string;
+  note?: string;
 }
 
 export interface Testimonial {

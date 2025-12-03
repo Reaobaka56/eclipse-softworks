@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import ServiceStat from './ServiceStat';
+import { Server } from 'lucide-react';
 // Framer Motion animations are embedded directly in elements for simplicity and performance
 
 const AnimatedNode: React.FC<{ label: string; active?: boolean; delay?: number }> = ({ label, active = true, delay = 0 }) => {
@@ -29,11 +30,13 @@ const MLInfrastructureCard: React.FC<{ onRequest?: () => void }> = ({ onRequest 
     >
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <motion.i className="fa-solid fa-server text-2xl mb-0 text-gray-300 group-hover:text-white transition-colors"
+          <motion.div
             animate={{ rotate: [0, 6, -6, 0] }}
             transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }}
             aria-hidden
-          />
+          >
+            <Server size={28} className="text-gray-300 group-hover:text-white transition-colors" />
+          </motion.div>
           <div>
             <h3 className="text-lg font-bold mb-1 text-white">ML Infrastructure</h3>
             <p className="text-xs text-gray-400">End-to-end ML infrastructure; pipelines, training, model ops, and scalable deployment.</p>

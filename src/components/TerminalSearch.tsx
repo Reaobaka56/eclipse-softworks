@@ -133,7 +133,7 @@ const TerminalSearch: React.FC<{ onNavigate: (section: string, scrollTo?: string
   return (
     <div className="relative">
       <div
-        className="hidden md:flex items-center gap-2 bg-black/70 border border-white/10 text-white/90 rounded px-3 py-1 font-mono text-sm"
+        className="hidden md:flex items-center gap-2 bg-black/70 border border-white/20 text-white/90 rounded px-3 py-1 font-mono text-sm"
         role="button"
         onClick={() => { if (typeof isOpenProp !== 'boolean') setVisibleInternal(v => !v); setTimeout(() => ref.current?.focus(), 25); }}
         title="Search (press '/')"
@@ -150,7 +150,7 @@ const TerminalSearch: React.FC<{ onNavigate: (section: string, scrollTo?: string
             data-testid="search-backdrop"
           />
 
-          <div role="dialog" aria-modal="true" className="relative w-full md:w-[520px] mt-12 md:mt-3 bg-black/95 border border-white/10 z-70 rounded-lg shadow-lg" aria-label="Search dialog" onKeyDown={handleKeyDown}>
+          <div role="dialog" aria-modal="true" className="relative w-full md:w-[520px] mt-12 md:mt-3 bg-black/95 border border-white/20 z-70 rounded-lg shadow-lg" aria-label="Search dialog" onKeyDown={handleKeyDown}>
             <div className="p-3 border-b border-white/5 flex gap-3 items-center">
               <span className="font-mono text-xs text-gray-400">&gt;</span>
               <input
@@ -173,7 +173,7 @@ const TerminalSearch: React.FC<{ onNavigate: (section: string, scrollTo?: string
                   key={`${r.kind}-${r.id}`}
                   onMouseEnter={() => setSelected(i)}
                   onMouseDown={(e) => { e.preventDefault(); handleChoose(r); }}
-                  className={`px-3 py-2 rounded cursor-pointer ${i === selected ? 'bg-white/5 text-white' : 'text-gray-300 hover:bg-white/3'}`}
+                  className={`px-3 py-2 rounded cursor-pointer ${i === selected ? 'bg-white/15 text-white' : 'text-gray-300 hover:bg-white/3'}`}
                 >
                   <div className="flex justify-between items-center">
                     <div className="font-mono text-sm">{r.label}</div>

@@ -8,281 +8,262 @@ const MetallicBackground: React.FC = () => {
     if (!containerRef.current) return;
     const container = containerRef.current;
 
-    // Cleanup existing canvas if any
+    // Cleanup existing canvas
     while (container.firstChild) {
       container.removeChild(container.firstChild);
     }
 
-    // 1. Scene Setup
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x000000, 0.01);
+    // Detect device capabilities
+    const isSmall = window.innerWidth <= 768 || 
+                    window.matchMedia('(pointer: coarse)').matches || 
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Scene Setup
+    const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    
     const renderer = new THREE.WebGLRenderer({ 
-        alpha: true, 
-        antialias: true,
-        powerPreference: "high-performance"
+      alpha: true, 
+      antialias: !isSmall,
+      powerPreference: "high-performance"
     });
     
-    // Reduce resolution and expensive features on small devices
-    const isSmall = window.innerWidth <= 768 || window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const devicePixelRatio = isSmall ? 1 : Math.min(window.devicePixelRatio, 2);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(devicePixelRatio);
-    renderer.shadowMap.enabled = !isSmall;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isSmall ? 1 : 1.5));
     container.appendChild(renderer.domElement);
 
-    // 2. Lighting - Boosted for Modern Three.js (Physical Units)
-    // Legacy Three.js used arbitrary units. Modern uses physical units (candela/lumens).
-    // We boost intensities significantly to replicate the look of the template's r128 version.
-    
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.0); // Boosted ambient
-    scene.add(ambientLight);
+    // Particle counts based on device
+    const particleCount = isSmall ? 600 : 1500;
+    const connectionDistance = isSmall ? 60 : 80;
+    const maxConnections = isSmall ? 2 : 3;
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 10.0); // Boosted directional
-    directionalLight.position.set(20, 30, 20);
-    directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
-    scene.add(directionalLight);
+    // Create particles
+    const particlesGeometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+    const velocities = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const sizes = new Float32Array(particleCount);
 
-    const pointLights = [
-        { color: 0x4488ff, intensity: 600, position: [15, 10, 15] },
-        { color: 0xff8844, intensity: 500, position: [-15, 5, -10] },
-        { color: 0x88ff44, intensity: 400, position: [10, -10, 15] },
-        { color: 0xff44ff, intensity: 300, position: [-10, 15, -15] }
+    // Tech color palette
+    const techColors = [
+      new THREE.Color(0x00d4ff),
+      new THREE.Color(0x0088ff),
+      new THREE.Color(0x4444ff),
+      new THREE.Color(0x8844ff),
+      new THREE.Color(0xffffff),
     ];
 
-    pointLights.forEach(lightConfig => {
-        const light = new THREE.PointLight(lightConfig.color, lightConfig.intensity, 40);
-        light.position.set(lightConfig.position[0], lightConfig.position[1], lightConfig.position[2]);
-        light.castShadow = true;
-        scene.add(light);
+    for (let i = 0; i < particleCount; i++) {
+      const i3 = i * 3;
+      
+      positions[i3] = (Math.random() - 0.5) * 400;
+      positions[i3 + 1] = (Math.random() - 0.5) * 400;
+      positions[i3 + 2] = (Math.random() - 0.5) * 200 - 100;
+
+      velocities[i3] = (Math.random() - 0.5) * 0.12;
+      velocities[i3 + 1] = (Math.random() - 0.5) * 0.12;
+      velocities[i3 + 2] = (Math.random() - 0.5) * 0.06;
+
+      const colorIndex = Math.random() < 0.7 ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * 5);
+      const color = techColors[colorIndex];
+      colors[i3] = color.r;
+      colors[i3 + 1] = color.g;
+      colors[i3 + 2] = color.b;
+
+      sizes[i] = Math.random() * 2 + 1;
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+    // Shader material for particles
+    const particlesMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        time: { value: 0 },
+        pixelRatio: { value: renderer.getPixelRatio() }
+      },
+      vertexShader: `
+        attribute float size;
+        attribute vec3 color;
+        varying vec3 vColor;
+        varying float vAlpha;
+        uniform float time;
+        
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          float pulse = sin(time * 2.0 + position.x * 0.01 + position.y * 0.01) * 0.3 + 0.7;
+          vAlpha = pulse;
+          gl_PointSize = size * (200.0 / -mvPosition.z) * pulse;
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        varying float vAlpha;
+        
+        void main() {
+          vec2 center = gl_PointCoord - vec2(0.5);
+          float dist = length(center);
+          if (dist > 0.5) discard;
+          float alpha = smoothstep(0.5, 0.0, dist) * vAlpha * 0.8;
+          float core = smoothstep(0.3, 0.0, dist);
+          vec3 finalColor = mix(vColor, vec3(1.0), core * 0.5);
+          gl_FragColor = vec4(finalColor, alpha);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      vertexColors: true
     });
 
-    // 3. Material Setup
-    const baseMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x333333,
-        roughness: 0.05,      // Very low roughness for high shine
-        metalness: 0.95,      // Very high metalness for metallic look
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.03,
-        reflectivity: 1.0,
-        envMapIntensity: 3.0,
-        transparent: true,
-        opacity: 0.9
+    const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particles);
+
+    // Connection lines
+    const linesMaterial = new THREE.LineBasicMaterial({
+      color: 0x00d4ff,
+      transparent: true,
+      opacity: 0.12,
+      blending: THREE.AdditiveBlending
     });
 
-    // Create environment map — only load if URLs are provided to avoid 404 requests
-    const envMapUrls: string[] = []; // replace with real sources when adding an HDR/skybox
-    if (envMapUrls.length === 6 && envMapUrls.some(Boolean)) {
-        const envMap = new THREE.CubeTextureLoader().load(envMapUrls);
-        baseMaterial.envMap = envMap;
-    } else {
-        baseMaterial.envMap = null;
-    }
+    let linesGeometry = new THREE.BufferGeometry();
+    let lines = new THREE.LineSegments(linesGeometry, linesMaterial);
+    scene.add(lines);
 
-    const shapes: THREE.Mesh[] = [];
-    
-    // 4. Create Geometry - Loop 1: 25 Large Floating Donuts (reduced on small screens)
-    const donutCount = isSmall ? 6 : 25;
-    for (let i = 0; i < donutCount; i++) {
-        const radius = Math.random() * 1.5 + 1.5; // Larger donuts: 1.5 to 3.0
-        const tube = radius * 0.3; // Proportional tube size
-        const geometry = new THREE.TorusGeometry(radius, tube, 32, 64);
-        // Clone material so each donut can have independent color animations
-        const mesh = new THREE.Mesh(geometry, baseMaterial.clone());
+    // Grid for tech feel
+    const gridSize = 400;
+    const gridDivisions = isSmall ? 20 : 40;
+    const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, 0x004466, 0x002233);
+    gridHelper.position.y = -100;
+    (gridHelper.material as THREE.Material).transparent = true;
+    (gridHelper.material as THREE.Material).opacity = 0.12;
+    scene.add(gridHelper);
 
-        mesh.position.set(
-            (Math.random() - 0.5) * 120,
-            (Math.random() - 0.5) * 80,
-            (Math.random() - 0.5) * 60 - 30
-        );
+    camera.position.z = 150;
 
-        mesh.rotation.set(
-            Math.random() * Math.PI * 2,
-            Math.random() * Math.PI * 2,
-            Math.random() * Math.PI * 2
-        );
-
-        mesh.userData = {
-            baseY: mesh.position.y,
-            baseX: mesh.position.x,
-            baseZ: mesh.position.z,
-            floatSpeed: Math.random() * 0.002 + 0.003,
-            floatAmplitude: Math.random() * 8 + 4,
-            rotationSpeed: {
-                x: (Math.random() - 0.5) * 0.005,
-                y: (Math.random() - 0.5) * 0.005,
-                z: (Math.random() - 0.5) * 0.005
-            },
-            hoverOffset: Math.random() * Math.PI * 2,
-            driftSpeed: Math.random() * 0.001 + 0.0005,
-            pulseSpeed: Math.random() * 0.003 + 0.002,
-            pulseAmplitude: Math.random() * 0.1 + 0.05
-        };
-
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        shapes.push(mesh);
-        scene.add(mesh);
-    }
-
-    // Loop 2: 5 Extra Large Centerpiece Donuts (reduced on small)
-    const centerCount = isSmall ? 1 : 5;
-    for (let i = 0; i < centerCount; i++) {
-        const radius = Math.random() * 2 + 3; // Very large: 3 to 5
-        const tube = radius * 0.25;
-        const geometry = new THREE.TorusGeometry(radius, tube, 48, 96);
-        const mesh = new THREE.Mesh(geometry, baseMaterial.clone());
-
-        mesh.position.set(
-            (Math.random() - 0.5) * 40,
-            (Math.random() - 0.5) * 30,
-            (Math.random() - 0.5) * 20 - 10
-        );
-
-        mesh.rotation.set(
-            Math.random() * Math.PI * 2,
-            Math.random() * Math.PI * 2,
-            Math.random() * Math.PI * 2
-        );
-
-        mesh.userData = {
-            baseY: mesh.position.y,
-            baseX: mesh.position.x,
-            baseZ: mesh.position.z,
-            floatSpeed: Math.random() * 0.001 + 0.002,
-            floatAmplitude: Math.random() * 6 + 3,
-            rotationSpeed: {
-                x: (Math.random() - 0.5) * 0.003,
-                y: (Math.random() - 0.5) * 0.003,
-                z: (Math.random() - 0.5) * 0.003
-            },
-            hoverOffset: Math.random() * Math.PI * 2,
-            driftSpeed: Math.random() * 0.0005 + 0.0003,
-            pulseSpeed: Math.random() * 0.002 + 0.001,
-            pulseAmplitude: Math.random() * 0.08 + 0.04
-        };
-
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        shapes.push(mesh);
-        scene.add(mesh);
-    }
-
-    camera.position.z = isSmall ? 35 : 25;
-
-    // 5. Interaction
+    // Mouse interaction
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
-    const mouseStrength = 0.0008;
 
     const handleMouseMove = (e: MouseEvent) => {
-        targetX = (e.clientX - window.innerWidth / 2) * mouseStrength;
-        targetY = (e.clientY - window.innerHeight / 2) * mouseStrength;
+      targetX = (e.clientX - window.innerWidth / 2) * 0.0003;
+      targetY = (e.clientY - window.innerHeight / 2) * 0.0003;
     };
+    
     if (!isSmall) document.addEventListener('mousemove', handleMouseMove);
 
     const handleResize = () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
     };
     window.addEventListener('resize', handleResize);
 
-    const handleClick = () => {
-        shapes.forEach((donut) => {
-            const originalScale = donut.scale.x;
-            donut.scale.setScalar(originalScale * 1.2);
-            
-            setTimeout(() => {
-                donut.scale.setScalar(originalScale);
-            }, 200);
-            
-            (donut.material as THREE.MeshPhysicalMaterial).color.setHSL(0.6, 0.8, 0.5);
-            setTimeout(() => {
-                (donut.material as THREE.MeshPhysicalMaterial).color.setHSL(0.1, 0.3, 0.2);
-            }, 100);
-        });
-    };
-    if (!isSmall) document.addEventListener('click', handleClick);
-
-    // 6. Animation Loop
+    // Animation
     const clock = new THREE.Clock();
     let animationId: number;
+    let frameCount = 0;
 
     const animate = () => {
-        animationId = requestAnimationFrame(animate);
-        const time = clock.getElapsedTime();
+      animationId = requestAnimationFrame(animate);
+      const time = clock.getElapsedTime();
+      frameCount++;
 
-        // Mouse follow smoothing
-        mouseX += (targetX - mouseX) * 0.02;
-        mouseY += (targetY - mouseY) * 0.02;
+      particlesMaterial.uniforms.time.value = time;
 
-        // Camera movement
-        camera.rotation.x = -mouseY * 0.6;
-        camera.rotation.y = -mouseX * 0.6;
-        camera.position.x = Math.sin(time * 0.05) * 1 + mouseX * 10;
-        camera.position.y = Math.cos(time * 0.03) * 0.5 + mouseY * 10;
+      mouseX += (targetX - mouseX) * 0.02;
+      mouseY += (targetY - mouseY) * 0.02;
 
-        // Shape animation
-        shapes.forEach((donut) => {
-            const data = donut.userData;
-            const mat = donut.material as THREE.MeshPhysicalMaterial;
+      camera.rotation.x = -mouseY * 0.3 + Math.sin(time * 0.1) * 0.02;
+      camera.rotation.y = -mouseX * 0.3 + Math.cos(time * 0.08) * 0.02;
+      camera.position.x = Math.sin(time * 0.05) * 5;
+      camera.position.y = Math.cos(time * 0.04) * 3;
+
+      const posArray = particlesGeometry.attributes.position.array as Float32Array;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+        posArray[i3] += velocities[i3];
+        posArray[i3 + 1] += velocities[i3 + 1];
+        posArray[i3 + 2] += velocities[i3 + 2];
+
+        if (posArray[i3] > 200) posArray[i3] = -200;
+        if (posArray[i3] < -200) posArray[i3] = 200;
+        if (posArray[i3 + 1] > 200) posArray[i3 + 1] = -200;
+        if (posArray[i3 + 1] < -200) posArray[i3 + 1] = 200;
+        if (posArray[i3 + 2] > 50) posArray[i3 + 2] = -150;
+        if (posArray[i3 + 2] < -150) posArray[i3 + 2] = 50;
+      }
+      particlesGeometry.attributes.position.needsUpdate = true;
+
+      // Update lines periodically
+      if (frameCount % (isSmall ? 5 : 3) === 0) {
+        const linePositions: number[] = [];
+        const checkCount = Math.min(particleCount, isSmall ? 150 : 300);
+        
+        for (let i = 0; i < checkCount; i++) {
+          const i3 = i * 3;
+          let connections = 0;
+          
+          for (let j = i + 1; j < checkCount && connections < maxConnections; j++) {
+            const j3 = j * 3;
+            const dx = posArray[i3] - posArray[j3];
+            const dy = posArray[i3 + 1] - posArray[j3 + 1];
+            const dz = posArray[i3 + 2] - posArray[j3 + 2];
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
             
-            // Floating motion
-            const floatY = Math.sin(time * data.floatSpeed + data.hoverOffset) * data.floatAmplitude;
-            const floatX = Math.cos(time * data.floatSpeed * 0.7 + data.hoverOffset) * data.floatAmplitude * 0.3;
-            const floatZ = Math.sin(time * data.floatSpeed * 0.5 + data.hoverOffset) * data.floatAmplitude * 0.2;
-            
-            donut.position.y = data.baseY + floatY;
-            donut.position.x = data.baseX + floatX;
-            donut.position.z = data.baseZ + floatZ;
-            
-            // Drift
-            donut.position.x += Math.sin(time * data.driftSpeed) * 0.05;
-            donut.position.z += Math.cos(time * data.driftSpeed * 0.8) * 0.03;
-            
-            // Rotation
-            donut.rotation.x += data.rotationSpeed.x;
-            donut.rotation.y += data.rotationSpeed.y;
-            donut.rotation.z += data.rotationSpeed.z;
-            
-            // Mouse influence on rotation (only on larger screens)
-            if (!isSmall) {
-                donut.rotation.x += mouseY * 0.02;
-                donut.rotation.y += mouseX * 0.02;
+            if (dist < connectionDistance) {
+              linePositions.push(
+                posArray[i3], posArray[i3 + 1], posArray[i3 + 2],
+                posArray[j3], posArray[j3 + 1], posArray[j3 + 2]
+              );
+              connections++;
             }
-            
-            // Pulse
-            const pulse = Math.sin(time * data.pulseSpeed + data.hoverOffset) * data.pulseAmplitude + 1;
-            donut.scale.setScalar(pulse);
-            
-            // Color shift
-            const hueShift = (Math.sin(time * 0.1 + data.hoverOffset * 0.5) + 1) * 0.1;
-            mat.color.setHSL(0.1 + hueShift, 0.3, 0.2);
-        });
+          }
+        }
+        
+        linesGeometry.dispose();
+        linesGeometry = new THREE.BufferGeometry();
+        linesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+        lines.geometry = linesGeometry;
+      }
 
-        renderer.render(scene, camera);
+      gridHelper.rotation.y = time * 0.02;
+      renderer.render(scene, camera);
     };
 
     animate();
 
     return () => {
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('click', handleClick);
-        window.removeEventListener('resize', handleResize);
-        cancelAnimationFrame(animationId);
+      document.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationId);
+      particlesGeometry.dispose();
+      particlesMaterial.dispose();
+      linesGeometry.dispose();
+      linesMaterial.dispose();
+      renderer.dispose();
+      if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
-        renderer.dispose();
+      }
     };
   }, []);
 
-    return <div ref={containerRef} id="canvas-container" className="fixed top-0 left-0 w-full h-full -z-20 bg-black pointer-events-none" />;
+  return (
+    <div 
+      ref={containerRef} 
+      id="canvas-container" 
+      className="fixed top-0 left-0 w-full h-full -z-20 bg-black pointer-events-none" 
+      aria-hidden="true" 
+      role="presentation" 
+    />
+  );
 };
 
 export default MetallicBackground;

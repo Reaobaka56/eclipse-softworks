@@ -9,7 +9,7 @@ const ServiceStat: React.FC<{ label: string; value: number }> = ({ label, value 
         <span>{label}</span>
         <span className="text-white font-bold">{value}%</span>
       </div>
-      <div className="w-full bg-white/5 h-2 rounded">
+      <div className="w-full bg-white/15 h-2 rounded">
         <motion.div
           className="h-2 rounded bg-green-500"
           initial={{ width: 0 }}

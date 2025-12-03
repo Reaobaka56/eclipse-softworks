@@ -3,7 +3,7 @@ import {
   MessageSquare, PieChart, ShoppingCart,
   Smartphone, Globe, Terminal
 } from 'lucide-react';
-import { NavItem, TeamMember, Service, Project, DownloadItem, Testimonial } from './types';
+import { NavItem, TeamMember, Service, Project, DownloadItem, Testimonial, GitHubProject } from './types';
 
 export const NAV_ITEMS: NavItem[] = [
   { id: 'home', label: 'Home' },
@@ -35,7 +35,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
   },
   { 
     initials: 'KM', 
-    name: 'Karabo Makgala', 
+    name: 'Karabo Mothapo', 
     role: 'Security Engineer', 
     description: 'Karabo is a security engineer focused on ensuring the safety, integrity, and privacy of all digital systems built by Eclipse Softworks.' 
   },
@@ -72,7 +72,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
   { 
     initials: 'YN', 
     name: 'Yongama Nkosi', 
-    role: 'Accountant', 
+    role: 'Finacial Manager', 
     description: 'Yongama is a dedicated accountant who ensures Eclipse Softworks maintains financial accuracy and compliance while supporting strategic business decisions.' 
   }
 ];
@@ -141,7 +141,7 @@ export const PROJECTS: Project[] = [
     tags: ['Python', 'TensorFlow', 'React'],
     icon: Brain,
     status: 'Live',
-    statusColor: 'text-gray-300 bg-white/5'
+    statusColor: 'text-gray-300 bg-white/15'
   },
   {
     title: 'Mobile Banking',
@@ -149,7 +149,7 @@ export const PROJECTS: Project[] = [
     tags: ['React Native', 'Node.js', 'MongoDB'],
     icon: Smartphone,
     status: 'In Development',
-    statusColor: 'text-gray-300 bg-white/5'
+    statusColor: 'text-gray-300 bg-white/15'
   },
   {
     title: 'E-Commerce Platform',
@@ -157,7 +157,55 @@ export const PROJECTS: Project[] = [
     tags: ['Next.js', 'Stripe', 'PostgreSQL'],
     icon: ShoppingCart,
     status: 'Live',
-    statusColor: 'text-gray-300 bg-white/5'
+    statusColor: 'text-gray-300 bg-white/15'
+  }
+];
+
+export const GITHUB_PROJECTS: GitHubProject[] = [
+  { 
+    icon: "layers", 
+    title: "DomainHive Framework", 
+    description: "An open-source, domain-specific framework for IoT, mobile development, and microservices with plug-and-play modular architecture.", 
+    tags: ["TypeScript", "Framework", "IoT"],
+    github: "https://github.com/Eclipse-Softworks/domainhive-framework",
+    stars: 1,
+    language: "TypeScript"
+  },
+  { 
+    icon: "bug", 
+    title: "Eclipse Issue Tracker", 
+    description: "A secure Spring Boot REST API for managing software issues with JWT authentication and PostgreSQL storage.", 
+    tags: ["Java", "Spring Boot", "REST API"],
+    github: "https://github.com/Eclipse-Softworks/eclipse-issue-tracker",
+    stars: 0,
+    language: "Java"
+  },
+  { 
+    icon: "terminal", 
+    title: "SvcMgr", 
+    description: "A cross-platform CLI tool for secure management of server services including SSH, databases, and HTTP with encrypted credential handling.", 
+    tags: ["Go", "CLI", "DevOps"],
+    github: "https://github.com/Eclipse-Softworks/svcmgr",
+    stars: 1,
+    language: "Go"
+  },
+  { 
+    icon: "brain", 
+    title: "P.A.R.T.N.E.R", 
+    description: "Predictive Adaptive Real-Time Neural Evaluation & Response - An AI chess assistant written in Go that learns from gameplay through behavioral cloning and provides real-time move suggestions using CNNs.", 
+    tags: ["Go", "AI", "Machine Learning"],
+    github: "https://github.com/Moon9t/P.A.R.T.N.E.R",
+    stars: 0,
+    language: "Go"
+  },
+  { 
+    icon: "shield", 
+    title: "CLI-H4X", 
+    description: "Secure TLS relay server with Signal Protocol double-ratchet E2EE, riddle-based registration, IP ban system, and admin monitoring for end-to-end encrypted real-time chat.", 
+    tags: ["Go", "Security", "Cryptography"],
+    github: "https://github.com/Moon9t/CLI-H4X",
+    stars: 0,
+    language: "Go"
   }
 ];
 
@@ -165,20 +213,24 @@ export const DARK_GRADIENT = 'from-zinc-800 to-black';
 
 export const DOWNLOADS: DownloadItem[] = [
   {
-    name: 'Umbra Language',
+    name: 'CLI-H4X',
     version: 'v1.0.0',
-    description: 'A modern, high-performance programming language designed for system-level development.',
-    platforms: ['Windows', 'Mac', 'Linux'],
-    iconLetter: 'U',
-    gradient: DARK_GRADIENT
+    description: 'Signal Protocol secure messaging system with end-to-end encryption, double-ratchet algorithm, and TLS 1.3.',
+    platforms: ['Windows', 'Linux'],
+    iconLetter: 'C',
+    gradient: DARK_GRADIENT,
+    downloadUrl: 'https://github.com/Moon9t/CLI-H4X/releases/tag/v1.0.0',
+    note: 'macOS users: Build from source'
   },
   {
-    name: 'Kasi Meals',
+    name: 'SvcMgr',
     version: 'v1.0.0',
-    description: 'Comprehensive meal planning application connecting communities with authentic cuisine.',
-    platforms: ['Android', 'iOS', 'Web'],
-    iconLetter: 'K',
-    gradient: DARK_GRADIENT
+    description: 'Cross-platform CLI tool for secure management of server services including SSH, databases, and HTTP with encrypted credentials.',
+    platforms: ['Windows', 'Linux'],
+    iconLetter: 'S',
+    gradient: DARK_GRADIENT,
+    downloadUrl: 'https://github.com/Eclipse-Softworks/svcmgr/releases',
+    note: 'macOS users: Build from source'
   }
 ];
 

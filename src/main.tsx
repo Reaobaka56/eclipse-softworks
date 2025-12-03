@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './router';
 import './styles.css';
 
 const rootElement = document.getElementById('root');
@@ -11,6 +12,20 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
+
+// Register service worker for PWA and caching
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered:', registration.scope);
+      })
+      .catch((error) => {
+        console.log('SW registration failed:', error);
+      });
+  });
+}
