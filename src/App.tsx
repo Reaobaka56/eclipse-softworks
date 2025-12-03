@@ -2322,37 +2322,17 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                             transition: { duration: 0.3 }
                           }}
                         >
-                            <form className="space-y-6 relative" onSubmit={async (e) => {
-                                                e.preventDefault();
-                                                // Bot detection - if honeypot is filled, silently reject
-                                                if (contactHoneypot) {
-                                                    setToast({ type: 'success', message: 'Message sent! We will respond shortly.' });
-                                                    return;
-                                                }
-                                                setIsSubmitting(true);
-                                                // Track form submission attempt
-                                                trackEvent?.('contact', 'submit', 'contact_form');
-                                                try {
-                                                    const res = await postContact({ name: contactName, email: contactEmail, message: contactMessage });
-                                                    if (res.ok) {
-                                                        setToast({ type: 'success', message: 'Message sent! We will respond shortly.' });
-                                                        setContactName('');
-                                                        setContactEmail('');
-                                                        setContactMessage('');
-                                                        // Track successful submission
-                                                        trackEvent?.('contact', 'success', 'contact_form');
-                                                    } else {
-                                                        setToast({ type: 'error', message: 'Failed to send message. Please try again later.' });
-                                                        trackEvent?.('contact', 'error', 'contact_form');
-                                                    }
-                                                } catch (err) {
-                                                    setToast({ type: 'error', message: 'An unexpected error occurred.' });
-                                                    trackEvent?.('contact', 'error', 'contact_form');
-                                                } finally {
-                                                    setIsSubmitting(false);
-                                                    setTimeout(() => setToast(null), 4500);
-                                                }
-                                            }}>
+                            <form 
+                              action="https://formsubmit.co/info@eclipse-softworks.com" 
+                              method="POST"
+                              className="space-y-6 relative"
+                            >
+                                {/* FormSubmit configuration */}
+                                <input type="hidden" name="_subject" value="New Contact from Eclipse Softworks Website" />
+                                <input type="hidden" name="_template" value="table" />
+                                <input type="hidden" name="_captcha" value="false" />
+                                <input type="hidden" name="_next" value="https://eclipse-softworks.com/?submitted=true" />
+                                
                                 <motion.div
                                   variants={{
                                     hidden: { opacity: 0, y: 20 },
@@ -2362,10 +2342,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Name</label>
                                     <motion.input 
                                       type="text" 
-                                      value={contactName} 
-                                      onChange={(e) => setContactName(e.target.value)} 
+                                      name="name"
                                       required 
-                                      aria-invalid={!contactName.trim()} 
                                       aria-label="Name" 
                                       className="input w-full bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="Your Name"
@@ -2381,10 +2359,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
                                     <motion.input 
                                       type="email" 
-                                      value={contactEmail} 
-                                      onChange={(e) => setContactEmail(e.target.value)} 
+                                      name="email"
                                       required 
-                                      aria-invalid={!contactEmail.includes('@')} 
                                       aria-label="Email" 
                                       className="input w-full bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="you@example.com"
@@ -2399,10 +2375,8 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                 >
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Message</label>
                                     <motion.textarea 
-                                      value={contactMessage} 
-                                      onChange={(e) => setContactMessage(e.target.value)} 
+                                      name="message"
                                       required 
-                                      aria-invalid={!contactMessage.trim()} 
                                       aria-label="Message" 
                                       className="w-full h-32 input bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="Your message..."
@@ -2410,23 +2384,10 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                     ></motion.textarea>
                                 </motion.div>
                                 {/* Honeypot field for bot detection - hidden from users */}
-                                <div className="absolute opacity-0 pointer-events-none" aria-hidden="true">
-                                    <label htmlFor="website">Website</label>
-                                    <input 
-                                      type="text" 
-                                      id="website"
-                                      name="website"
-                                      tabIndex={-1}
-                                      autoComplete="off"
-                                      value={contactHoneypot}
-                                      onChange={(e) => setContactHoneypot(e.target.value)}
-                                    />
-                                </div>
+                                <input type="text" name="_honey" style={{ display: 'none' }} />
                                 <motion.button 
                                   type="submit" 
-                                  disabled={isSubmitting || !isFormValid} 
                                   className="w-full px-6 py-3 btn-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 flex items-center justify-center gap-2" 
-                                  aria-disabled={isSubmitting || !isFormValid}
                                   variants={{
                                     hidden: { opacity: 0, y: 20 },
                                     visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.4 } }
@@ -2434,14 +2395,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                   whileHover={{ scale: 1.05 }}
                                   whileTap={{ scale: 0.95 }}
                                 >
-                                    {isSubmitting ? (
-                                        <>
-                                            <LoadingSpinner size="sm" />
-                                            Sending…
-                                        </>
-                                    ) : (
-                                        'Send Message'
-                                    )}
+                                    Send Message
                                 </motion.button>
                             </form>
                         </motion.div>
