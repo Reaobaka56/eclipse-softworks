@@ -1,11 +1,11 @@
 /**
  * Contact service helper
- * Submits contact form data to the Vercel serverless API endpoint.
- * Includes client-side validation and honeypot field for spam prevention.
+ * Submits contact form data to FormSubmit.co for email delivery.
+ * Includes client-side validation and spam prevention.
  */
 
-// API endpoint for contact form
-const FORM_ENDPOINT = "/api/contact";
+// FormSubmit.co endpoint - sends form submissions to your email
+const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/info@eclipse-softworks.com";
 
 // Response interface
 interface ContactResponse {
@@ -57,10 +57,11 @@ export async function postContact(data: ContactData): Promise<ContactResponse> {
       name: data.name.trim(),
       email: data.email.trim().toLowerCase(),
       message: data.message.trim(),
-      honeypot: data.honeypot || '', // Include honeypot for bot detection
+      _subject: `New Contact from ${data.name.trim()} - Eclipse Softworks`,
+      _template: 'table', // Use table template for better formatting
     };
 
-    const res = await fetch(FORM_ENDPOINT, {
+    const res = await fetch(FORMSUBMIT_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

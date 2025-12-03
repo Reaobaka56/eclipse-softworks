@@ -9,7 +9,18 @@ export interface TeamMember {
   initials: string;
   name: string;
   role: string;
+  specialty: string;
   description: string;
+  skills?: string[];
+  linkedin?: string;
+}
+
+export type TeamCategory = 'leadership' | 'development' | 'business';
+
+export interface TeamData {
+  leadership: TeamMember[];
+  development: TeamMember[];
+  business: TeamMember[];
 }
 
 export interface Service {
@@ -57,4 +68,55 @@ export interface Testimonial {
   company: string;
   content: string;
   avatar: string;
+}
+
+// ============================================
+// NEW TYPES - Added for constants refactor
+// ============================================
+
+export interface Stat {
+  val: string;
+  label: string;
+}
+
+export interface CompanyValue {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+export interface Milestone {
+  year: string;
+  title: string;
+  desc: string;
+}
+
+export interface WhyChooseUsItem {
+  title: string;
+  desc: string;
+}
+
+export interface ResourceItem {
+  icon: string;
+  title: string;
+  desc: string;
+  meta: string[];
+}
+
+export interface CaseStudy {
+  title: string;
+  client: string;
+  industry: string;
+  challenge: string;
+  solution: string;
+  results: string[];
+  testimonial?: string;
+  testimonialAuthor?: string;
+  image?: string;
+}
+
+export interface TrustedBrand {
+  name: string;
+  logo?: string;
+  industry: string;
 }

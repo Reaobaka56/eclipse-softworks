@@ -5,7 +5,12 @@ import Toast from './components/Toast';
 import { postContact } from './services/contact';
 import LoadingSpinner from './components/LoadingSpinner';
 import { motion } from 'framer-motion';
-import { DARK_GRADIENT, TESTIMONIALS, SERVICES, GITHUB_PROJECTS } from '../constants';
+import { 
+  DARK_GRADIENT, TESTIMONIALS, SERVICES, GITHUB_PROJECTS, 
+  LEADERSHIP_TEAM, DEVELOPMENT_TEAM, BUSINESS_TEAM,
+  COMPANY_STATS, COMPANY_VALUES, COMPANY_MILESTONES,
+  WHY_CHOOSE_US, RESOURCES
+} from '../constants';
 import Footer from './components/Footer';
 import { useAnalytics } from './services/analytics';
 import { 
@@ -323,12 +328,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
                       }}
                     >
-                        {[
-                            { val: "3+", label: "Projects Completed" },
-                            { val: "10+", label: "Team Members" },
-                            { val: "1+", label: "Years Experience" },
-                            { val: "100%", label: "Client Satisfaction" }
-                        ].map((stat, i) => (
+                        {COMPANY_STATS.map((stat, i) => (
                             <motion.div 
                               key={i} 
                               className="text-center glass-card p-6"
@@ -1735,11 +1735,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                     </div>
 
                     <div className="about-grid mb-20">
-                      {[
-                        { icon: "bullseye", title: "Our Mission", desc: "To empower businesses across Africa with reliable, scalable, and innovative digital solutions that drive measurable impact." },
-                        { icon: "eye", title: "Our Vision", desc: "To become the leading software powerhouse born in Africa — a hub for engineering excellence, creativity, and global innovation." },
-                        { icon: "heart", title: "Our Values", desc: "Integrity, quality, collaboration, and a relentless drive for excellence form the foundation of everything we build." }
-                      ].map((item, i) => (
+                      {COMPANY_VALUES.map((item, i) => (
                         <div key={i} className="glass-card p-8 text-center about-mission transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
                           <div className="flex justify-center mb-4">
                             <DynamicIcon name={item.icon} size={32} className="text-gray-300" />
@@ -1780,15 +1776,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         <h3 className="text-xl font-bold text-white mb-4">Our Journey</h3>
                         <p className="text-gray-400 mb-4">Milestones of Eclipse Softworks' growth and impact.</p>
                             <div className="flex overflow-x-auto gap-4 py-4" role="list" aria-label="Company timeline milestones">
-                          {[{
-                            year: '2018', title: 'Founded', desc: 'Moon founded Eclipse Softworks to build AI solutions for African markets.'
-                          },{
-                            year: '2020', title: 'First Major Client', desc: 'Delivered our first enterprise-grade AI system, enabling analytics at scale.'
-                          },{
-                            year: '2022', title: 'Products', desc: 'Launched SDK and templates to help accelerate client projects.'
-                          },{
-                            year: '2024', title: 'Expansion', desc: 'Expanded team and partnered with major financial institutions.'
-                          }].map((milestone, i) => (
+                          {COMPANY_MILESTONES.map((milestone, i) => (
                                     <div key={i} role="listitem" className="min-w-[220px] p-4 bg-white/15 rounded-md">
                               <div className="text-xs text-gray-500 mb-2">{milestone.year}</div>
                               <div className="font-bold text-white mb-1">{milestone.title}</div>
@@ -1808,32 +1796,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {[
-                                { 
-                                  icon: "layers", 
-                                  title: "DomainHive Framework", 
-                                  desc: "Open-source framework for IoT, mobile development, and microservices.", 
-                                  tags: ["TypeScript", "Framework"], 
-                                  github: "https://github.com/Eclipse-Softworks/domainhive-framework",
-                                  stars: 1 
-                                },
-                                { 
-                                  icon: "bug", 
-                                  title: "Eclipse Issue Tracker", 
-                                  desc: "Secure Spring Boot REST API for managing software issues with JWT auth.", 
-                                  tags: ["Java", "Spring Boot"], 
-                                  github: "https://github.com/Eclipse-Softworks/eclipse-issue-tracker",
-                                  stars: 0 
-                                },
-                                { 
-                                  icon: "terminal", 
-                                  title: "SvcMgr", 
-                                  desc: "Cross-platform CLI for secure management of server services.", 
-                                  tags: ["Go", "CLI"], 
-                                  github: "https://github.com/Eclipse-Softworks/svcmgr",
-                                  stars: 1 
-                                }
-                            ].map((proj, i) => (
+                            {GITHUB_PROJECTS.slice(0, 3).map((proj, i) => (
                                 <div key={i} className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
                                     <div className="h-48 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/20 relative">
                                         <DynamicIcon name={proj.icon} size={48} className="text-gray-700" />
@@ -1845,7 +1808,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                         )}
                                     </div>
                                     <h3 className="text-lg font-bold mb-2">{proj.title}</h3>
-                                    <p className="text-sm text-gray-400 mb-4">{proj.desc}</p>
+                                    <p className="text-sm text-gray-400 mb-4">{proj.description}</p>
                                     <div className="flex flex-wrap gap-2 mb-4">
                                         {proj.tags.map(tag => (
                                             <span key={tag} className="text-xs px-2 py-1 bg-white/10 rounded">{tag}</span>
@@ -1891,11 +1854,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {[
-                                { icon: "cube", title: "Eclipse SDK", desc: "Complete software development kit for building applications with Eclipse Softworks tools.", meta: ["Size: 45 MB", "Version: v2.1.0"] },
-                                { icon: "book", title: "API Documentation", desc: "Comprehensive documentation and examples for our REST API endpoints.", meta: ["Size: PDF", "Version: v1.8"] },
-                                { icon: "mobile-alt", title: "Mobile Templates", desc: "Ready-to-use mobile app templates and UI components for rapid development.", meta: ["Size: 120 MB", "Version: v1.5.2"] }
-                            ].map((res, i) => (
+                            {RESOURCES.map((res, i) => (
                                 <div key={i} className="glass-card p-6 group transform transition-transform duration-200 ease-out hover:-translate-y-1 hover:shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/10">
                                     <div className="h-32 bg-gradient-to-br from-gray-900 to-black rounded mb-4 flex items-center justify-center border border-white/20">
                                         <DynamicIcon name={res.icon} size={32} className="text-gray-600" />
@@ -1922,13 +1881,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                             <div>
                                 <h3 className="text-2xl font-bold mb-6">Why Choose Us</h3>
                                 <ul className="space-y-4">
-                                    {[
-                                        { title: "Local Insight", desc: "Deep understanding of African markets and user behavior." },
-                                        { title: "Technical Expertise", desc: "Proficiency in cutting-edge tools and methodologies." },
-                                        { title: "Collaboration", desc: "We work closely with our clients to bring their vision to life." },
-                                        { title: "Scalability", desc: "Future-proof architecture designed to grow with your business." },
-                                        { title: "Social Impact", desc: "We support initiatives that uplift underserved communities through digital tools and training." }
-                                    ].map((item, i) => (
+                                    {WHY_CHOOSE_US.map((item, i) => (
                                         <li key={i} className="flex items-start gap-3">
                                             <div className="w-5 h-5 flex items-center justify-center rounded-full bg-white/15 mt-1">
                                                 <CheckCircle size={12} className="text-gray-300" />
@@ -2019,35 +1972,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                           whileHover={{ scale: 1.05 }}
                         >Leadership</motion.h3>
                         <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                            {[
-                                {
-                                    initials: "MK",
-                                    name: "Moon Khumalo",
-                                    role: "Founder & CEO",
-                                    specialty: "AI Systems and Backend",
-                                    desc: "Moon is the visionary founder and CEO of Eclipse Softworks, specializing in AI systems and backend infrastructure. He leads the team with innovation and purpose.",
-                                    gradient: DARK_GRADIENT,
-                                    linkedin: "#"
-                                },
-                                {
-                                    initials: "XB",
-                                    name: "Xolani Buthelezi",
-                                    role: "CTO & Technical Architect",
-                                    specialty: "System Architecture",
-                                    desc: "Xolani is the Chief Technology Officer and Technical Architect, responsible for the overall technical strategy and system architecture.",
-                                    gradient: DARK_GRADIENT,
-                                    linkedin: "#"
-                                },
-                                {
-                                    initials: "PM",
-                                    name: "Philani Makhoba",
-                                    role: "COO & Front-End Developer",
-                                    specialty: "Operations & UI/UX",
-                                    desc: "Philani serves as the COO of Eclipse Softworks. A skilled front-end developer, he brings structure and clarity to every project the team undertakes.",
-                                    gradient: DARK_GRADIENT,
-                                    linkedin: "#"
-                                }
-                            ].map((member, i) => (
+                            {LEADERSHIP_TEAM.map((member, i) => (
                                 <motion.div
                                   key={i}
                                   id={member.name.toLowerCase().replace(/\s+/g, '-')}
@@ -2072,7 +1997,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                   }}
                                 >
                                     <motion.div
-                                      className={`w-24 h-24 bg-gradient-to-br ${member.gradient} rounded-full mx-auto mb-6 flex items-center justify-center text-white font-bold text-2xl shadow-lg`}
+                                      className={`w-24 h-24 bg-gradient-to-br ${DARK_GRADIENT} rounded-full mx-auto mb-6 flex items-center justify-center text-white font-bold text-2xl shadow-lg`}
                                       whileHover={{
                                         rotate: 10,
                                         scale: 1.1,
@@ -2094,9 +2019,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                       className="text-xs text-gray-500 mb-4 uppercase tracking-wider"
                                       whileHover={{ color: "#9ca3af" }}
                                     >{member.specialty}</motion.p>
-                                    <p className="text-sm text-gray-400 mb-4 leading-relaxed">{member.desc}</p>
+                                    <p className="text-sm text-gray-400 mb-4 leading-relaxed">{member.description}</p>
                                     <motion.a
-                                      href={member.linkedin}
+                                      href={member.linkedin || '#'}
                                       className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2"
                                       whileHover={{ x: 5 }}
                                       whileTap={{ scale: 0.95 }}
@@ -2122,53 +2047,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                           whileHover={{ scale: 1.05 }}
                         >Development Team</motion.h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[
-                                {
-                                    initials: "TM",
-                                    name: "Tshepiso Mokwena",
-                                    role: "Full-Stack Developer",
-                                    specialty: "Front-End Focused",
-                                    desc: "Tshepiso is a passionate front-end developer and aspiring full-stack engineer, dedicated to creating impactful user experiences and scalable digital solutions.",
-                                    gradient: DARK_GRADIENT,
-                                    skills: ["React", "TypeScript", "Node.js"]
-                                },
-                                {
-                                    initials: "SM",
-                                    name: "Siphesihle Magudulela",
-                                    role: "Front-End Developer",
-                                    specialty: "UI/UX Development",
-                                    desc: "Siphesihle is a dedicated front-end developer with a keen eye for clean interfaces and intuitive user interactions.",
-                                    gradient: DARK_GRADIENT,
-                                    skills: ["React", "CSS", "JavaScript"]
-                                },
-                                {
-                                    initials: "KM",
-                                    name: "Karabo Makgala",
-                                    role: "Security Engineer",
-                                    specialty: "Cybersecurity",
-                                    desc: "Karabo is a security engineer focused on ensuring the safety, integrity, and privacy of all digital systems built by Eclipse Softworks.",
-                                    gradient: DARK_GRADIENT,
-                                    skills: ["Security", "Penetration Testing", "Compliance"]
-                                },
-                                {
-                                    initials: "NK",
-                                    name: "Neo Kganyile",
-                                    role: "Penetration Tester",
-                                    specialty: "Security Testing",
-                                    desc: "Neo is an enthusiastic learner and aspiring penetration tester who brings curiosity and a security-first mindset to the team.",
-                                    gradient: DARK_GRADIENT,
-                                    skills: ["Pen Testing", "Vulnerability Assessment", "Ethical Hacking"]
-                                },
-                                {
-                                    initials: "NN",
-                                    name: "Nkanyiso Ndlovu",
-                                    role: "Systems Engineer",
-                                    specialty: "Infrastructure & DevOps",
-                                    desc: "Nkanyiso is a systems engineer and coordinator who ensures seamless integration and coordination across all technical systems and team operations.",
-                                    gradient: DARK_GRADIENT,
-                                    skills: ["DevOps", "Cloud", "System Administration"]
-                                }
-                            ].map((member, i) => (
+                            {DEVELOPMENT_TEAM.map((member, i) => (
                                 <motion.div
                                   key={i}
                                   id={member.name.toLowerCase().replace(/\s+/g, '-')}
@@ -2193,7 +2072,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                   }}
                                 >
                                     <motion.div
-                                      className={`w-20 h-20 bg-gradient-to-br ${member.gradient} rounded-full mx-auto mb-4 flex items-center justify-center text-white font-bold text-lg shadow-md`}
+                                      className={`w-20 h-20 bg-gradient-to-br ${DARK_GRADIENT} rounded-full mx-auto mb-4 flex items-center justify-center text-white font-bold text-lg shadow-md`}
                                       whileHover={{
                                         rotate: 5,
                                         scale: 1.1,
@@ -2214,21 +2093,23 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                       className="text-xs text-gray-500 mb-3 uppercase tracking-wider"
                                       whileHover={{ color: "#6b7280" }}
                                     >{member.specialty}</motion.p>
-                                    <p className="text-sm text-gray-400 mb-4 leading-relaxed">{member.desc}</p>
-                                    <div className="flex flex-wrap gap-1 justify-center mb-4">
-                                        {member.skills.map((skill, skillIndex) => (
-                                            <motion.span
-                                              key={skillIndex}
-                                              className="text-xs px-2 py-1 bg-white/10 rounded-full"
-                                              whileHover={{
-                                                scale: 1.1,
-                                                backgroundColor: "rgba(255, 255, 255, 0.2)"
-                                              }}
-                                            >
-                                                {skill}
-                                            </motion.span>
-                                        ))}
-                                    </div>
+                                    <p className="text-sm text-gray-400 mb-4 leading-relaxed">{member.description}</p>
+                                    {member.skills && (
+                                      <div className="flex flex-wrap gap-1 justify-center mb-4">
+                                          {member.skills.map((skill, skillIndex) => (
+                                              <motion.span
+                                                key={skillIndex}
+                                                className="text-xs px-2 py-1 bg-white/10 rounded-full"
+                                                whileHover={{
+                                                  scale: 1.1,
+                                                  backgroundColor: "rgba(255, 255, 255, 0.2)"
+                                                }}
+                                              >
+                                                  {skill}
+                                              </motion.span>
+                                          ))}
+                                      </div>
+                                    )}
                                 </motion.div>
                             ))}
                         </div>
@@ -2247,26 +2128,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                           whileHover={{ scale: 1.05 }}
                         >Business Operations</motion.h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                            {[
-                                {
-                                    initials: "YN",
-                                    name: "Yongama Nkosi",
-                                    role: "Accountant",
-                                    specialty: "Financial Planning",
-                                    desc: "Yongama is a dedicated accountant who ensures Eclipse Softworks maintains financial accuracy and compliance while supporting strategic business decisions.",
-                                    gradient: DARK_GRADIENT,
-                                    linkedin: "#"
-                                },
-                                {
-                                    initials: "SK",
-                                    name: "Simphiwe Kubheka",
-                                    role: "Accountant",
-                                    specialty: "Financial Analysis",
-                                    desc: "Simphiwe is a meticulous accountant focused on financial planning and analysis, helping Eclipse Softworks achieve sustainable growth and profitability.",
-                                    gradient: DARK_GRADIENT,
-                                    linkedin: "#"
-                                }
-                            ].map((member, i) => (
+                            {BUSINESS_TEAM.map((member, i) => (
                                 <motion.div
                                   key={i}
                                   id={member.name.toLowerCase().replace(/\s+/g, '-')}
@@ -2291,7 +2153,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                   }}
                                 >
                                     <motion.div
-                                      className={`w-20 h-20 bg-gradient-to-br ${member.gradient} rounded-full mx-auto mb-4 flex items-center justify-center text-white font-bold text-lg shadow-md`}
+                                      className={`w-20 h-20 bg-gradient-to-br ${DARK_GRADIENT} rounded-full mx-auto mb-4 flex items-center justify-center text-white font-bold text-lg shadow-md`}
                                       whileHover={{
                                         rotate: -5,
                                         scale: 1.1,
@@ -2312,9 +2174,9 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                       className="text-xs text-gray-500 mb-3 uppercase tracking-wider"
                                       whileHover={{ color: "#6b7280" }}
                                     >{member.specialty}</motion.p>
-                                    <p className="text-sm text-gray-400 mb-4 leading-relaxed">{member.desc}</p>
+                                    <p className="text-sm text-gray-400 mb-4 leading-relaxed">{member.description}</p>
                                     <motion.a
-                                      href={member.linkedin}
+                                      href={member.linkedin || '#'}
                                       className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2"
                                       whileHover={{ x: 5 }}
                                       whileTap={{ scale: 0.95 }}
