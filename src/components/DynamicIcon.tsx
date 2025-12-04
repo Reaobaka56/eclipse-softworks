@@ -59,7 +59,7 @@ interface DynamicIconProps {
 
 const DynamicIcon: React.FC<DynamicIconProps> = ({ name, size = 24, className = '' }) => {
     const IconComponent = iconMap[name] || Sparkles;
-    return <IconComponent size={size} className={className} />;
+    return <IconComponent size={size} className={className} aria-hidden="true" />;
 };
 
 export default DynamicIcon;
