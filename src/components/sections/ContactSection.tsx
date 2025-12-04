@@ -32,6 +32,7 @@ const ContactSection: React.FC = () => {
         setIsSubmitting(true);
 
         try {
+            console.log("Submitting form...");
             const response = await fetch("https://formsubmit.co/ajax/info@eclipse-softworks.com", {
                 method: "POST",
                 headers: {
@@ -48,12 +49,16 @@ const ContactSection: React.FC = () => {
                 })
             });
 
+            console.log("Response received:", response.status);
             const data = await response.json();
+            console.log("Data received:", data);
 
             if (response.ok) {
+                console.log("Success! Showing modal.");
                 setShowSuccessModal(true);
                 setFormData({ name: '', email: '', message: '' }); // Reset form
             } else {
+                console.error("Error response:", data);
                 throw new Error(data.message || "Something went wrong");
             }
         } catch (error) {
