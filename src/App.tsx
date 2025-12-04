@@ -2333,70 +2333,46 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                                 <input type="hidden" name="_captcha" value="false" />
                                 <input type="hidden" name="_next" value="https://eclipse-softworks.com/?submitted=true" />
                                 
-                                <motion.div
-                                  variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.1 } }
-                                  }}
-                                >
+                                <div>
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Name</label>
-                                    <motion.input 
+                                    <input 
                                       type="text" 
                                       name="name"
                                       required 
                                       aria-label="Name" 
                                       className="input w-full bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="Your Name"
-                                      whileFocus={{ scale: 1.02 }}
                                     />
-                                </motion.div>
-                                <motion.div
-                                  variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.2 } }
-                                  }}
-                                >
+                                </div>
+                                <div>
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
-                                    <motion.input 
+                                    <input 
                                       type="email" 
                                       name="email"
                                       required 
                                       aria-label="Email" 
                                       className="input w-full bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="you@example.com"
-                                      whileFocus={{ scale: 1.02 }}
                                     />
-                                </motion.div>
-                                <motion.div
-                                  variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.3 } }
-                                  }}
-                                >
+                                </div>
+                                <div>
                                     <label className="block text-sm font-medium text-gray-400 mb-2">Message</label>
-                                    <motion.textarea 
+                                    <textarea 
                                       name="message"
                                       required 
                                       aria-label="Message" 
                                       className="w-full h-32 input bg-black/70 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors" 
                                       placeholder="Your message..."
-                                      whileFocus={{ scale: 1.02 }}
-                                    ></motion.textarea>
-                                </motion.div>
+                                    ></textarea>
+                                </div>
                                 {/* Honeypot field for bot detection - hidden from users */}
                                 <input type="text" name="_honey" style={{ display: 'none' }} />
-                                <motion.button 
+                                <button 
                                   type="submit" 
-                                  className="w-full px-6 py-3 btn-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 flex items-center justify-center gap-2" 
-                                  variants={{
-                                    hidden: { opacity: 0, y: 20 },
-                                    visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.4 } }
-                                  }}
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
+                                  className="w-full px-6 py-3 btn-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:ring-offset-2 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-transform" 
                                 >
                                     Send Message
-                                </motion.button>
+                                </button>
                             </form>
                         </motion.div>
 
