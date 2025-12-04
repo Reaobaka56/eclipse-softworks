@@ -170,7 +170,7 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
       {/* Modals */}
       <Suspense fallback={null}>
         {isDemoModalOpen && (
-          <DemoBookingModal onClose={() => setIsDemoModalOpen(false)} />
+          <DemoBookingModal isOpen={isDemoModalOpen} onClose={() => setIsDemoModalOpen(false)} />
         )}
 
         {showSuccessModal && (

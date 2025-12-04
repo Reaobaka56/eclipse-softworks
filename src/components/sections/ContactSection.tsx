@@ -275,11 +275,11 @@ const ContactSection: React.FC = () => {
 
             <AnimatePresence>
                 {toast && (
-                    <Toast
-                        message={toast.message}
-                        type={toast.type}
-                        onClose={() => setToast(null)}
-                    />
+                    <div className="fixed bottom-6 right-6 z-50">
+                        <Toast type={toast.type}>
+                            {toast.message}
+                        </Toast>
+                    </div>
                 )}
             </AnimatePresence>
         </motion.section>
