@@ -118,6 +118,18 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
   const location = useLocation();
   const { trackPageView, trackEvent, trackClick: _trackClick, getRecommendations, prefersReducedMotion: _prefersReducedMotion } = useAnalytics();
   
+  // Check for successful form submission
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('submitted') === 'true') {
+      setShowSuccessModal(true);
+      // Clean up the URL
+      navigate('/', { replace: true });
+    }
+  }, [location.search, navigate]);
+  
   // Determine initial section from route or prop
   const getInitialSection = () => {
     if (initialSection) return initialSection;
@@ -2496,6 +2508,87 @@ const App: React.FC<AppProps> = ({ initialSection }) => {
                 onClose={() => setIsDemoModalOpen(false)} 
               />
             </Suspense>
+            
+            {/* Success Modal for Form Submission */}
+            {showSuccessModal && (
+              <motion.div 
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {/* Backdrop */}
+                <motion.div 
+                  className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  onClick={() => setShowSuccessModal(false)}
+                />
+                
+                {/* Modal Content */}
+                <motion.div 
+                  className="relative glass-card p-8 max-w-md w-full text-center"
+                  initial={{ scale: 0.8, opacity: 0, y: 50 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                >
+                  {/* Success Icon */}
+                  <motion.div 
+                    className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2, type: "spring", damping: 15 }}
+                  >
+                    <CheckCircle size={40} className="text-white" />
+                  </motion.div>
+                  
+                  <motion.h3 
+                    className="text-2xl font-bold text-white mb-3"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    Message Sent Successfully!
+                  </motion.h3>
+                  
+                  <motion.p 
+                    className="text-gray-400 mb-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    Thank you for reaching out. We've received your message and will get back to you within 24-48 hours.
+                  </motion.p>
+                  
+                  <motion.div
+                    className="flex flex-col sm:flex-row gap-3 justify-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <button 
+                      onClick={() => setShowSuccessModal(false)}
+                      className="px-6 py-3 btn-primary flex items-center justify-center gap-2"
+                    >
+                      <Sparkles size={18} />
+                      Continue Exploring
+                    </button>
+                  </motion.div>
+                  
+                  {/* Close button */}
+                  <button 
+                    onClick={() => setShowSuccessModal(false)}
+                    className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                    aria-label="Close modal"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </motion.div>
+              </motion.div>
+            )}
             
             {/* Cookie Consent Banner */}
             <Suspense fallback={null}>
