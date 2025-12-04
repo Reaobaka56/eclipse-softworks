@@ -7,6 +7,7 @@ const ContactSection: React.FC = () => {
     const [contactHoneypot, setContactHoneypot] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     // Form state
     const [formData, setFormData] = useState({
@@ -50,7 +51,7 @@ const ContactSection: React.FC = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setToast({ message: "Message sent successfully! We'll get back to you soon.", type: 'success' });
+                setShowSuccessModal(true);
                 setFormData({ name: '', email: '', message: '' }); // Reset form
             } else {
                 throw new Error(data.message || "Something went wrong");
@@ -279,6 +280,25 @@ const ContactSection: React.FC = () => {
                         <Toast type={toast.type}>
                             {toast.message}
                         </Toast>
+                    </div>
+                )}
+                {showSuccessModal && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            className="bg-zinc-900 border border-white/20 rounded-lg p-8 max-w-md w-full text-center"
+                        >
+                            <h3 className="text-2xl font-bold text-white mb-4">Message Sent!</h3>
+                            <p className="text-gray-400 mb-6">Thank you for contacting us. We'll get back to you shortly.</p>
+                            <button
+                                onClick={() => setShowSuccessModal(false)}
+                                className="px-6 py-2 bg-white text-black font-bold rounded hover:bg-gray-200 transition-colors"
+                            >
+                                Close
+                            </button>
+                        </motion.div>
                     </div>
                 )}
             </AnimatePresence>
