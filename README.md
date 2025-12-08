@@ -1,5 +1,5 @@
 <div align="center">
-<img src="img/eclipse%20softworks.jpg" alt="Eclipse Softworks" height="400px" width="100%">
+<img width="4205" height="3960" alt="Eclipse Logo " src="https://github.com/user-attachments/assets/160eac42-82d0-4bca-90b9-0459bd77b4e6" />
 </div>
 
 # Eclipse Softworks — Enterprise-Grade Business Website
