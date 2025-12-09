@@ -49,6 +49,7 @@ export interface GitHubProject {
   github: string;
   stars: number;
   language?: string;
+  docs?: string;
 }
 
 export interface DownloadItem {

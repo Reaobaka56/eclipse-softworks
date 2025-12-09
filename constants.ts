@@ -3,10 +3,10 @@ import {
   MessageSquare, PieChart, ShoppingCart,
   Smartphone, Globe, Terminal
 } from 'lucide-react';
-import { 
-  NavItem, TeamMember, TeamData, Service, Project, DownloadItem, 
-  Testimonial, GitHubProject, Stat, CompanyValue, Milestone, 
-  WhyChooseUsItem, ResourceItem, CaseStudy, TrustedBrand 
+import {
+  NavItem, TeamMember, TeamData, Service, Project, DownloadItem,
+  Testimonial, GitHubProject, Stat, CompanyValue, Milestone,
+  WhyChooseUsItem, ResourceItem, CaseStudy, TrustedBrand
 } from './types';
 
 export const NAV_ITEMS: NavItem[] = [
@@ -23,25 +23,25 @@ export const NAV_ITEMS: NavItem[] = [
 // ============================================
 
 export const LEADERSHIP_TEAM: TeamMember[] = [
-  { 
-    initials: 'MK', 
-    name: 'Moon Khumalo', 
+  {
+    initials: 'MK',
+    name: 'Moon Khumalo',
     role: 'Founder & CEO',
     specialty: 'AI Systems & Backend',
     description: 'Moon is the visionary founder and CEO of Eclipse Softworks, specializing in AI systems and backend infrastructure. He leads the team with innovation and purpose.',
     linkedin: '#'
   },
-  { 
-    initials: 'XB', 
-    name: 'Xolani Buthelezi', 
+  {
+    initials: 'XB',
+    name: 'Xolani Buthelezi',
     role: 'CTO & Technical Architect',
     specialty: 'System Architecture',
     description: 'Xolani is the Chief Technology Officer and Technical Architect, responsible for the overall technical strategy and system architecture.',
     linkedin: '#'
   },
-  { 
-    initials: 'PM', 
-    name: 'Philani Makhoba', 
+  {
+    initials: 'PM',
+    name: 'Philani Makhoba',
     role: 'COO & Front-End Developer',
     specialty: 'Operations & UI/UX',
     description: 'Philani serves as the COO of Eclipse Softworks. A skilled front-end developer, he brings structure and clarity to every project the team undertakes.',
@@ -50,41 +50,41 @@ export const LEADERSHIP_TEAM: TeamMember[] = [
 ];
 
 export const DEVELOPMENT_TEAM: TeamMember[] = [
-  { 
-    initials: 'TM', 
-    name: 'Tshepiso Mokwena', 
+  {
+    initials: 'TM',
+    name: 'Tshepiso Mokwena',
     role: 'Full-Stack Developer',
     specialty: 'Front-End Focused',
     description: 'Tshepiso is a passionate front-end developer and aspiring full-stack engineer, dedicated to creating impactful user experiences and scalable digital solutions.',
     skills: ['React', 'TypeScript', 'Node.js']
   },
-  { 
-    initials: 'SM', 
-    name: 'Siphesihle Magudulela', 
+  {
+    initials: 'SM',
+    name: 'Siphesihle Magudulela',
     role: 'Front-End Developer',
     specialty: 'UI/UX Development',
     description: 'Siphesihle is a dedicated front-end developer with a keen eye for clean interfaces and intuitive user interactions.',
     skills: ['React', 'CSS', 'JavaScript']
   },
-  { 
-    initials: 'KM', 
-    name: 'Karabo Mothapo', 
+  {
+    initials: 'KM',
+    name: 'Karabo Mothapo',
     role: 'Security Engineer',
     specialty: 'Cybersecurity',
     description: 'Karabo is a security engineer focused on ensuring the safety, integrity, and privacy of all digital systems built by Eclipse Softworks.',
     skills: ['Security', 'Penetration Testing', 'Compliance']
   },
-  { 
-    initials: 'NK', 
-    name: 'Neo Kganyile', 
+  {
+    initials: 'NK',
+    name: 'Neo Kganyile',
     role: 'Penetration Tester',
     specialty: 'Security Testing',
     description: 'Neo is an enthusiastic learner and aspiring penetration tester who brings curiosity and a security-first mindset to the team.',
     skills: ['Pen Testing', 'Vulnerability Assessment', 'Ethical Hacking']
   },
-  { 
-    initials: 'NN', 
-    name: 'Nkanyiso Ndlovu', 
+  {
+    initials: 'NN',
+    name: 'Nkanyiso Ndlovu',
     role: 'Systems Engineer',
     specialty: 'Infrastructure & DevOps',
     description: 'Nkanyiso is a systems engineer and coordinator who ensures seamless integration and coordination across all technical systems and team operations.',
@@ -93,17 +93,17 @@ export const DEVELOPMENT_TEAM: TeamMember[] = [
 ];
 
 export const BUSINESS_TEAM: TeamMember[] = [
-  { 
-    initials: 'YN', 
-    name: 'Yongama Nkosi', 
+  {
+    initials: 'YN',
+    name: 'Yongama Nkosi',
     role: 'Accountant',
     specialty: 'Financial Planning',
     description: 'Yongama is a dedicated accountant who ensures Eclipse Softworks maintains financial accuracy and compliance while supporting strategic business decisions.',
     linkedin: '#'
   },
-  { 
-    initials: 'SK', 
-    name: 'Simphiwe Kubheka', 
+  {
+    initials: 'SK',
+    name: 'Simphiwe Kubheka',
     role: 'Accountant',
     specialty: 'Financial Analysis',
     description: 'Simphiwe is a meticulous accountant focused on financial planning and analysis, helping Eclipse Softworks achieve sustainable growth and profitability.',
@@ -126,62 +126,62 @@ export const TEAM_MEMBERS: TeamMember[] = [
 ];
 
 export const SERVICES: Service[] = [
-  { 
-    icon: Brain, 
-    title: 'AI-Powered Solutions', 
+  {
+    icon: Brain,
+    title: 'AI-Powered Solutions',
     description: 'Leverage the power of machine learning and deep learning to automate tasks, optimize processes, and enhance decision-making.',
     features: ['Machine Learning', 'Deep Learning', 'Predictive Analytics', 'Natural Language Processing']
   },
-  { 
-    icon: Globe, 
-    title: 'Web Development', 
+  {
+    icon: Globe,
+    title: 'Web Development',
     description: 'Modern, responsive web applications built with cutting-edge technologies and optimized for performance and user experience.',
     features: ['React/Next.js', 'Responsive Design', 'SEO Optimization', 'Performance Tuning']
   },
-  { 
-    icon: Smartphone, 
-    title: 'Mobile App Development', 
+  {
+    icon: Smartphone,
+    title: 'Mobile App Development',
     description: 'Cross-platform mobile applications built with performance and user experience at the forefront.',
     features: ['React Native', 'Flutter', 'iOS/Android', 'Progressive Web Apps']
   },
-  { 
-    icon: Terminal, 
-    title: 'Custom Software Engineering', 
+  {
+    icon: Terminal,
+    title: 'Custom Software Engineering',
     description: 'We tailor software solutions for your specific business needs, whether it\'s an internal system or a SaaS product.',
     features: ['Full-Stack Development', 'API Design', 'Database Architecture', 'System Integration']
   },
-  { 
-    icon: Server, 
-    title: 'DevOps & Automation', 
+  {
+    icon: Server,
+    title: 'DevOps & Automation',
     description: 'Enhance reliability and speed with CI/CD pipelines, automated testing, and infrastructure as code.',
     features: ['CI/CD Pipelines', 'Infrastructure as Code', 'Monitoring', 'Automated Testing']
   },
-  { 
-    icon: BarChart3, 
-    title: 'Consulting & Strategy', 
+  {
+    icon: BarChart3,
+    title: 'Consulting & Strategy',
     description: 'Strategic technology consulting to help you make informed decisions and optimize your digital transformation journey.',
     features: ['Digital Strategy', 'Technology Assessment', 'Architecture Design', 'Team Training']
   }
 ];
 
 export const PROJECTS: Project[] = [
-  { 
-    title: 'Predictive Maintenance', 
-    description: 'AI system for manufacturing equipment failure prediction.', 
-    tags: ['ML', 'IoT', 'Python'], 
-    icon: Activity 
+  {
+    title: 'Predictive Maintenance',
+    description: 'AI system for manufacturing equipment failure prediction.',
+    tags: ['ML', 'IoT', 'Python'],
+    icon: Activity
   },
-  { 
-    title: 'Customer Service AI', 
-    description: 'Natural language processing for automated customer support.', 
-    tags: ['NLP', 'Chatbots', 'TensorFlow'], 
-    icon: MessageSquare 
+  {
+    title: 'Customer Service AI',
+    description: 'Natural language processing for automated customer support.',
+    tags: ['NLP', 'Chatbots', 'TensorFlow'],
+    icon: MessageSquare
   },
-  { 
-    title: 'Financial Analytics', 
-    description: 'Risk assessment and market prediction models for finance sector.', 
-    tags: ['Analytics', 'Forecasting', 'PyTorch'], 
-    icon: PieChart 
+  {
+    title: 'Financial Analytics',
+    description: 'Risk assessment and market prediction models for finance sector.',
+    tags: ['Analytics', 'Forecasting', 'PyTorch'],
+    icon: PieChart
   },
   {
     title: 'AI-Powered Analytics',
@@ -210,46 +210,56 @@ export const PROJECTS: Project[] = [
 ];
 
 export const GITHUB_PROJECTS: GitHubProject[] = [
-  { 
-    icon: "layers", 
-    title: "DomainHive Framework", 
-    description: "An open-source, domain-specific framework for IoT, mobile development, and microservices with plug-and-play modular architecture.", 
+  {
+    icon: "box",
+    title: "Luna-SDK",
+    description: "A development kit to maintain the same architecture across all projects.",
+    tags: ["SDK", "Go", "TypeScript", "Python"],
+    github: "https://github.com/Eclipse-Softworks/Luna-SDK",
+    stars: 0,
+    language: "Go",
+    docs: "https://docs-lunasdk.eclipse-softworks.com/"
+  },
+  {
+    icon: "layers",
+    title: "DomainHive Framework",
+    description: "An open-source, domain-specific framework for IoT, mobile development, and microservices with plug-and-play modular architecture.",
     tags: ["TypeScript", "Framework", "IoT"],
     github: "https://github.com/Eclipse-Softworks/domainhive-framework",
     stars: 1,
     language: "TypeScript"
   },
-  { 
-    icon: "bug", 
-    title: "Eclipse Issue Tracker", 
-    description: "A secure Spring Boot REST API for managing software issues with JWT authentication and PostgreSQL storage.", 
+  {
+    icon: "bug",
+    title: "Eclipse Issue Tracker",
+    description: "A secure Spring Boot REST API for managing software issues with JWT authentication and PostgreSQL storage.",
     tags: ["Java", "Spring Boot", "REST API"],
     github: "https://github.com/Eclipse-Softworks/eclipse-issue-tracker",
     stars: 0,
     language: "Java"
   },
-  { 
-    icon: "terminal", 
-    title: "SvcMgr", 
-    description: "A cross-platform CLI tool for secure management of server services including SSH, databases, and HTTP with encrypted credential handling.", 
+  {
+    icon: "terminal",
+    title: "SvcMgr",
+    description: "A cross-platform CLI tool for secure management of server services including SSH, databases, and HTTP with encrypted credential handling.",
     tags: ["Go", "CLI", "DevOps"],
     github: "https://github.com/Eclipse-Softworks/svcmgr",
     stars: 1,
     language: "Go"
   },
-  { 
-    icon: "brain", 
-    title: "P.A.R.T.N.E.R", 
-    description: "Predictive Adaptive Real-Time Neural Evaluation & Response - An AI chess assistant written in Go that learns from gameplay through behavioral cloning and provides real-time move suggestions using CNNs.", 
+  {
+    icon: "brain",
+    title: "P.A.R.T.N.E.R",
+    description: "Predictive Adaptive Real-Time Neural Evaluation & Response - An AI chess assistant written in Go that learns from gameplay through behavioral cloning and provides real-time move suggestions using CNNs.",
     tags: ["Go", "AI", "Machine Learning"],
     github: "https://github.com/Moon9t/P.A.R.T.N.E.R",
     stars: 0,
     language: "Go"
   },
-  { 
-    icon: "shield", 
-    title: "CLI-H4X", 
-    description: "Secure TLS relay server with Signal Protocol double-ratchet E2EE, riddle-based registration, IP ban system, and admin monitoring for end-to-end encrypted real-time chat.", 
+  {
+    icon: "shield",
+    title: "CLI-H4X",
+    description: "Secure TLS relay server with Signal Protocol double-ratchet E2EE, riddle-based registration, IP ban system, and admin monitoring for end-to-end encrypted real-time chat.",
     tags: ["Go", "Security", "Cryptography"],
     github: "https://github.com/Moon9t/CLI-H4X",
     stars: 0,
@@ -322,20 +332,20 @@ export const COMPANY_STATS: Stat[] = [
 // ============================================
 
 export const COMPANY_VALUES: CompanyValue[] = [
-  { 
-    icon: "bullseye", 
-    title: "Our Mission", 
-    desc: "To empower businesses across Africa with reliable, scalable, and innovative digital solutions that drive measurable impact." 
+  {
+    icon: "bullseye",
+    title: "Our Mission",
+    desc: "To empower businesses across Africa with reliable, scalable, and innovative digital solutions that drive measurable impact."
   },
-  { 
-    icon: "eye", 
-    title: "Our Vision", 
-    desc: "To become the leading software powerhouse born in Africa — a hub for engineering excellence, creativity, and global innovation." 
+  {
+    icon: "eye",
+    title: "Our Vision",
+    desc: "To become the leading software powerhouse born in Africa — a hub for engineering excellence, creativity, and global innovation."
   },
-  { 
-    icon: "heart", 
-    title: "Our Values", 
-    desc: "Integrity, quality, collaboration, and a relentless drive for excellence form the foundation of everything we build." 
+  {
+    icon: "heart",
+    title: "Our Values",
+    desc: "Integrity, quality, collaboration, and a relentless drive for excellence form the foundation of everything we build."
   }
 ];
 
@@ -345,23 +355,23 @@ export const COMPANY_VALUES: CompanyValue[] = [
 
 export const COMPANY_MILESTONES: Milestone[] = [
   {
-    year: '2018', 
-    title: 'Founded', 
+    year: '2018',
+    title: 'Founded',
     desc: 'Moon founded Eclipse Softworks to build AI solutions for African markets.'
   },
   {
-    year: '2020', 
-    title: 'First Major Client', 
+    year: '2020',
+    title: 'First Major Client',
     desc: 'Delivered our first enterprise-grade AI system, enabling analytics at scale.'
   },
   {
-    year: '2022', 
-    title: 'Products', 
+    year: '2022',
+    title: 'Products',
     desc: 'Launched SDK and templates to help accelerate client projects.'
   },
   {
-    year: '2024', 
-    title: 'Expansion', 
+    year: '2024',
+    title: 'Expansion',
     desc: 'Expanded team and partnered with major financial institutions.'
   }
 ];
@@ -383,23 +393,17 @@ export const WHY_CHOOSE_US: WhyChooseUsItem[] = [
 // ============================================
 
 export const RESOURCES: ResourceItem[] = [
-  { 
-    icon: "cube", 
-    title: "Eclipse SDK", 
-    desc: "Complete software development kit for building applications with Eclipse Softworks tools.", 
-    meta: ["Size: 45 MB", "Version: v2.1.0"] 
+  {
+    icon: "book",
+    title: "API Documentation",
+    desc: "Comprehensive documentation and examples for our REST API endpoints.",
+    meta: ["Size: PDF", "Version: v1.8"]
   },
-  { 
-    icon: "book", 
-    title: "API Documentation", 
-    desc: "Comprehensive documentation and examples for our REST API endpoints.", 
-    meta: ["Size: PDF", "Version: v1.8"] 
-  },
-  { 
-    icon: "mobile-alt", 
-    title: "Mobile Templates", 
-    desc: "Ready-to-use mobile app templates and UI components for rapid development.", 
-    meta: ["Size: 120 MB", "Version: v1.5.2"] 
+  {
+    icon: "mobile-alt",
+    title: "Mobile Templates",
+    desc: "Ready-to-use mobile app templates and UI components for rapid development.",
+    meta: ["Size: 120 MB", "Version: v1.5.2"]
   }
 ];
 

@@ -1,18 +1,56 @@
-import React from 'react';
-import { Star, Github, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Star, Github, CheckCircle, X, Loader2, Check } from 'lucide-react';
 import {
     COMPANY_VALUES, COMPANY_MILESTONES, GITHUB_PROJECTS,
-    TESTIMONIALS, RESOURCES, WHY_CHOOSE_US
+    TESTIMONIALS, RESOURCES, WHY_CHOOSE_US, COMPANY_STATS
 } from '../../../constants';
 import DynamicIcon from '../DynamicIcon';
 import NeuralCard from '../NeuralCard';
-import StatsCounter from '../StatsCounter';
 
 interface AboutSectionProps {
     onNav: (sectionId: string, scrollTo?: string) => void;
 }
 
 const AboutSection: React.FC<AboutSectionProps> = ({ onNav }) => {
+    const [notifyResource, setNotifyResource] = useState<string | null>(null);
+    const [email, setEmail] = useState('');
+    const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+
+    const handleNotify = (resourceName: string) => {
+        setNotifyResource(resourceName);
+        setStatus('idle');
+        setEmail('');
+    };
+
+    const submitNotify = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setStatus('submitting');
+
+        try {
+            await fetch("https://formsubmit.co/ajax/info@eclipse-softworks.com", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    _subject: `New Subscription for ${notifyResource}`,
+                    _template: "table",
+                    _captcha: "false"
+                })
+            });
+            setStatus('success');
+            setTimeout(() => {
+                setNotifyResource(null);
+            }, 3000);
+        } catch (error) {
+            console.error(error);
+            setStatus('error');
+        }
+    };
     return (
         <section className="py-24 px-6 relative z-10 border-t border-white/20 animate-slide-down">
             <div className="max-w-7xl mx-auto">
@@ -61,10 +99,14 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onNav }) => {
                             <div className="col-span-2 md:col-span-1">
                                 <NeuralCard className="w-full h-48" />
                             </div>
-                            <StatsCounter end={50} label="Projects Completed" />
-                            <StatsCounter end={15} label="Team Members" />
-                            <StatsCounter end={5} label="Years Experience" />
-                            <StatsCounter end={'100%'} label="Client Satisfaction" />
+                            <div className="col-span-2 md:col-span-1 grid grid-cols-2 gap-4">
+                                {COMPANY_STATS.map((stat) => (
+                                    <div key={stat.label} className="text-center p-4 bg-white/5 rounded-lg border border-white/10">
+                                        <div className="text-2xl font-bold text-white mb-1">{stat.val}</div>
+                                        <p className="text-xs text-gray-400">{stat.label}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,7 +209,10 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onNav }) => {
                                     <span>{res.meta[0]}</span>
                                     <span>{res.meta[1]}</span>
                                 </div>
-                                <button className="w-full px-4 py-2 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium rounded">
+                                <button
+                                    onClick={() => handleNotify(res.title)}
+                                    className="w-full px-4 py-2 bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium rounded"
+                                >
                                     Get Notified
                                 </button>
                             </div>
@@ -203,6 +248,75 @@ const AboutSection: React.FC<AboutSectionProps> = ({ onNav }) => {
                     </div>
                 </div>
             </div>
+
+            {createPortal(
+                <AnimatePresence>
+                    {notifyResource && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                className="bg-zinc-900 border border-white/20 rounded-lg p-8 max-w-md w-full relative"
+                            >
+                                <button
+                                    onClick={() => setNotifyResource(null)}
+                                    className="absolute top-4 right-4 text-gray-400 hover:text-white"
+                                >
+                                    <X size={20} />
+                                </button>
+
+                                <h3 className="text-xl font-bold text-white mb-2">Get Notified</h3>
+                                <p className="text-gray-400 text-sm mb-6">
+                                    We'll send you an email when <strong>{notifyResource}</strong> is ready.
+                                </p>
+
+                                {status === 'success' ? (
+                                    <div className="text-center py-6">
+                                        <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <Check className="text-green-500" size={24} />
+                                        </div>
+                                        <p className="text-white font-medium">You're on the list!</p>
+                                    </div>
+                                ) : (
+                                    <form onSubmit={submitNotify} className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
+                                            <input
+                                                type="email"
+                                                required
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                className="w-full bg-black/50 border border-white/20 rounded px-4 py-3 text-white focus:ring focus:border-white/40 transition-colors"
+                                                placeholder="you@company.com"
+                                                disabled={status === 'submitting'}
+                                            />
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            disabled={status === 'submitting'}
+                                            className="w-full px-6 py-3 bg-white text-black font-bold rounded hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                                        >
+                                            {status === 'submitting' ? (
+                                                <>
+                                                    <Loader2 size={18} className="animate-spin" />
+                                                    Joining...
+                                                </>
+                                            ) : (
+                                                'Notify Me'
+                                            )}
+                                        </button>
+                                        {status === 'error' && (
+                                            <p className="text-red-400 text-sm text-center">Something went wrong. Please try again.</p>
+                                        )}
+                                    </form>
+                                )}
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </section>
     );
 };

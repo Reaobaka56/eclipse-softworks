@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Star, Github } from 'lucide-react';
+import { Star, Github, Book } from 'lucide-react';
 import { GITHUB_PROJECTS } from '../../../constants';
 import DynamicIcon from '../DynamicIcon';
 
@@ -146,6 +146,17 @@ const ProjectsSection: React.FC = () => {
                                 <Github size={16} />
                                 View on GitHub
                             </a>
+                            {proj.docs && (
+                                <a
+                                    href={proj.docs}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors mt-auto"
+                                >
+                                    <Book size={16} />
+                                    Docs
+                                </a>
+                            )}
                         </motion.div>
                     ))}
                 </motion.div>

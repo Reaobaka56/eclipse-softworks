@@ -132,15 +132,6 @@ const TerminalSearch: React.FC<{ onNavigate: (section: string, scrollTo?: string
 
   return (
     <div className="relative">
-      <div
-        className="hidden md:flex items-center gap-2 bg-black/70 border border-white/20 text-white/90 rounded px-3 py-1 font-mono text-sm"
-        role="button"
-        onClick={() => { if (typeof isOpenProp !== 'boolean') setVisibleInternal(v => !v); setTimeout(() => ref.current?.focus(), 25); }}
-        title="Search (press '/')"
-      >
-        <span className="text-sm text-gray-300">$</span>
-        <span className="text-gray-400"> Search the site (Press '/') </span>
-      </div>
 
       {visible && (
         <div className="fixed inset-0 z-60 flex items-start justify-center md:items-start md:justify-start p-4 md:p-8">
