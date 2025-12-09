@@ -19,6 +19,8 @@ A modern, enterprise-grade corporate website for Eclipse Softworks — an AI and
 - **Modern UX**: Glass morphism design, smooth animations, and responsive layouts
 - **Type-Safe**: Full TypeScript coverage with strict type checking
 - **Tested**: Comprehensive test suite with 90%+ code coverage
+- **Command Interface**: Powerful terminal-style search and navigation (`/` to activate)
+- **Luna-SDK**: Integrated documentation and showcase for the flagship Luna SDK
 - **CI/CD Ready**: Automated testing, building, and deployment pipelines
 
 ## 🛠 Tech Stack
@@ -36,12 +38,13 @@ A modern, enterprise-grade corporate website for Eclipse Softworks — an AI and
 - **Sentry** - Error monitoring and reporting
 - **React Helmet Async** - Dynamic meta tag management
 - **React Router** - Client-side routing
+- **FormSubmit.co** - Serverless form handling
 - **Intersection Observer** - Performance-optimized animations
 
 ### 3D & Visual Effects
 - **Three.js** - 3D graphics and animations
 - **@react-three/fiber** - React renderer for Three.js
-- **Font Awesome** - Icon library
+- **Lucide React** - Beautiful & consistent icon library
 
 ## 📦 Quick Start
 
