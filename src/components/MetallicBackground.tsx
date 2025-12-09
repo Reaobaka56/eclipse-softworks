@@ -14,20 +14,20 @@ const MetallicBackground: React.FC = () => {
     }
 
     // Detect device capabilities
-    const isSmall = window.innerWidth <= 768 || 
-                    window.matchMedia('(pointer: coarse)').matches || 
-                    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isSmall = window.innerWidth <= 768 ||
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Scene Setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    
-    const renderer = new THREE.WebGLRenderer({ 
-      alpha: true, 
+
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
       antialias: !isSmall,
       powerPreference: "high-performance"
     });
-    
+
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isSmall ? 1 : 1.5));
     container.appendChild(renderer.domElement);
@@ -55,7 +55,7 @@ const MetallicBackground: React.FC = () => {
 
     for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3;
-      
+
       positions[i3] = (Math.random() - 0.5) * 400;
       positions[i3 + 1] = (Math.random() - 0.5) * 400;
       positions[i3 + 2] = (Math.random() - 0.5) * 200 - 100;
@@ -74,8 +74,8 @@ const MetallicBackground: React.FC = () => {
     }
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    particlesGeometry.setAttribute('aColor', new THREE.BufferAttribute(colors, 3));
+    particlesGeometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
 
     // Shader material for particles
     const particlesMaterial = new THREE.ShaderMaterial({
@@ -84,18 +84,18 @@ const MetallicBackground: React.FC = () => {
         pixelRatio: { value: renderer.getPixelRatio() }
       },
       vertexShader: `
-        attribute float size;
-        attribute vec3 color;
+        attribute float aSize;
+        attribute vec3 aColor;
         varying vec3 vColor;
         varying float vAlpha;
         uniform float time;
         
         void main() {
-          vColor = color;
+          vColor = aColor;
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
           float pulse = sin(time * 2.0 + position.x * 0.01 + position.y * 0.01) * 0.3 + 0.7;
           vAlpha = pulse;
-          gl_PointSize = size * (200.0 / -mvPosition.z) * pulse;
+          gl_PointSize = aSize * (200.0 / -mvPosition.z) * pulse;
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
@@ -115,8 +115,7 @@ const MetallicBackground: React.FC = () => {
       `,
       transparent: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      vertexColors: true
+      blending: THREE.AdditiveBlending
     });
 
     const particles = new THREE.Points(particlesGeometry, particlesMaterial);
@@ -155,7 +154,7 @@ const MetallicBackground: React.FC = () => {
       targetX = (e.clientX - window.innerWidth / 2) * 0.0003;
       targetY = (e.clientY - window.innerHeight / 2) * 0.0003;
     };
-    
+
     if (!isSmall) document.addEventListener('mousemove', handleMouseMove);
 
     const handleResize = () => {
@@ -186,7 +185,7 @@ const MetallicBackground: React.FC = () => {
       camera.position.y = Math.cos(time * 0.04) * 3;
 
       const posArray = particlesGeometry.attributes.position.array as Float32Array;
-      
+
       for (let i = 0; i < particleCount; i++) {
         const i3 = i * 3;
         posArray[i3] += velocities[i3];
@@ -206,18 +205,18 @@ const MetallicBackground: React.FC = () => {
       if (frameCount % (isSmall ? 5 : 3) === 0) {
         const linePositions: number[] = [];
         const checkCount = Math.min(particleCount, isSmall ? 150 : 300);
-        
+
         for (let i = 0; i < checkCount; i++) {
           const i3 = i * 3;
           let connections = 0;
-          
+
           for (let j = i + 1; j < checkCount && connections < maxConnections; j++) {
             const j3 = j * 3;
             const dx = posArray[i3] - posArray[j3];
             const dy = posArray[i3 + 1] - posArray[j3 + 1];
             const dz = posArray[i3 + 2] - posArray[j3 + 2];
             const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-            
+
             if (dist < connectionDistance) {
               linePositions.push(
                 posArray[i3], posArray[i3 + 1], posArray[i3 + 2],
@@ -227,7 +226,7 @@ const MetallicBackground: React.FC = () => {
             }
           }
         }
-        
+
         linesGeometry.dispose();
         linesGeometry = new THREE.BufferGeometry();
         linesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
@@ -256,12 +255,12 @@ const MetallicBackground: React.FC = () => {
   }, []);
 
   return (
-    <div 
-      ref={containerRef} 
-      id="canvas-container" 
-      className="fixed top-0 left-0 w-full h-full -z-20 bg-black pointer-events-none" 
-      aria-hidden="true" 
-      role="presentation" 
+    <div
+      ref={containerRef}
+      id="canvas-container"
+      className="fixed top-0 left-0 w-full h-full -z-20 bg-black pointer-events-none"
+      aria-hidden="true"
+      role="presentation"
     />
   );
 };

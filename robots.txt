@@ -31,10 +31,10 @@ Allow: /
 Disallow: /api/
 Disallow: /_next/
 Disallow: /admin/
-Disallow: /manifest.json
 Disallow: /coverage/
 
 # Allow important assets
+Allow: /assets/
 Allow: /img/
 Allow: /*.js$
 Allow: /*.css$
