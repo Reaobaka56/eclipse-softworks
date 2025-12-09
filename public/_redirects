@@ -1,0 +1,11 @@
+# Netlify SPA Redirects
+# Static files served directly
+/img/*    /img/:splat    200
+/assets/* /assets/:splat 200
+
+# Legal pages
+/privacy  /privacy.html  200
+/terms    /terms.html    200
+
+# SPA fallback - all other routes to index.html
+/*        /index.html    200
