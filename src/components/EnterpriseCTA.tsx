@@ -11,7 +11,7 @@ const EnterpriseCTA: React.FC<EnterpriseCTAProps> = ({ onContactClick }) => {
     <section className="py-20 relative overflow-hidden">
       {/* Subtle gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/[0.02] to-transparent" />
-      
+
       <div className="max-w-4xl mx-auto px-4 relative z-10">
         <motion.div
           className="text-center"
@@ -25,7 +25,7 @@ const EnterpriseCTA: React.FC<EnterpriseCTAProps> = ({ onContactClick }) => {
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             Ready to accelerate your digital transformation?
           </span>
-          
+
           {/* Headline */}
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
             Let's build something
@@ -33,13 +33,13 @@ const EnterpriseCTA: React.FC<EnterpriseCTAProps> = ({ onContactClick }) => {
               extraordinary together
             </span>
           </h2>
-          
+
           {/* Subheadline */}
           <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-            From AI-powered solutions to enterprise software, we help ambitious companies 
+            From AI-powered solutions to enterprise software, we help ambitious companies
             ship products that make a difference.
           </p>
-          
+
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <motion.button
@@ -52,9 +52,9 @@ const EnterpriseCTA: React.FC<EnterpriseCTAProps> = ({ onContactClick }) => {
               Get in Touch
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </motion.button>
-            
+
             <motion.a
-              href="https://calendly.com/eclipse-softworks"
+              href="https://calendly.com/infoeclipsesoftworks"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-6 py-3 rounded-lg border border-white/20 text-white font-semibold text-sm hover:bg-white/15 transition-colors"
@@ -65,7 +65,7 @@ const EnterpriseCTA: React.FC<EnterpriseCTAProps> = ({ onContactClick }) => {
               Schedule a Call
             </motion.a>
           </div>
-          
+
           {/* Trust indicators */}
           <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-xs text-gray-500">
             <span className="flex items-center gap-2">
