@@ -1,8 +1,8 @@
 <div align="center">
-<img src="img/eclipse%20softworks.jpg" alt="Eclipse Softworks" height="400px" width="100%">
+<img width="4205" height="3960" alt="Eclipse Logo " src="https://github.com/user-attachments/assets/b6f81b93-7dae-479a-aa2f-fe0e942f7590" />
 </div>
 
-# Eclipse Softworks — Enterprise-Grade Business Website
+# Eclipse Softworks — Business Website
 
 [![CI/CD](https://github.com/Reaobaka56/eclipse-softworks/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Reaobaka56/eclipse-softworks/actions/workflows/ci-cd.yml)
 [![codecov](https://codecov.io/gh/Reaobaka56/eclipse-softworks/branch/main/graph/badge.svg)](https://codecov.io/gh/Reaobaka56/eclipse-softworks)
